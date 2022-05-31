@@ -15,8 +15,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Ecome App',
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: backgroundColor,
+      theme: ThemeData.light().copyWith(
+        scaffoldBackgroundColor: Colors.white,
       ),
       home: LoginScreen(),
     );

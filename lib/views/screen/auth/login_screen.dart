@@ -1,4 +1,5 @@
 import 'package:ecome_app/const.dart';
+import 'package:ecome_app/views/screen/auth/sign_up.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -77,6 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Text(
                     'Login',
                     style: TextStyle(
+                      color: textButtonColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
                     ),
@@ -88,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Don\'t have account ?',
+                  'Don\'t have an account ?',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -98,7 +100,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: 10,
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => SignUpScreen()));
+                  },
                   child: Text(
                     'Sign Up',
                     style: TextStyle(
