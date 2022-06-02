@@ -1,8 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:ecome_app/const.dart';
+import 'package:ecome_app/controllers/auth_controllers.dart';
 import 'package:ecome_app/views/screen/auth/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -13,6 +17,49 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   bool hidePassword = true;
+  bool isLoading = false;
+
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  Uint8List? _image;
+
+  selectedImage() async {
+    Uint8List im = await AuthController().pickImage(ImageSource.gallery);
+
+    setState(() {
+      _image = im;
+    });
+  }
+
+  signUpUser() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    String res = await AuthController().signUpUsers(
+        _fullNameController.text,
+        _userNameController.text,
+        _emailController.text,
+        _passwordController.text,
+        _image);
+
+    setState(() {
+      isLoading = false;
+    });
+
+    if (res != 'success') {
+      return showSnackbar(res, context, Colors.red[900]);
+    } else {
+      _fullNameController.clear();
+      _userNameController.clear();
+      _emailController.clear();
+      _image!.clear();
+      return showSnackbar(
+          'Congratulations account has been created', context, Colors.green);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,15 +73,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
             children: [
               Stack(
                 children: [
-                  CircleAvatar(
-                    radius: 64,
-                    backgroundColor: Colors.blue,
-                    backgroundImage: NetworkImage('profilePic'),
-                  ),
+                  _image != null
+                      ? CircleAvatar(
+                          radius: 64,
+                          backgroundColor: Colors.blue,
+                          backgroundImage: MemoryImage(_image!),
+                        )
+                      : CircleAvatar(
+                          radius: 64,
+                          backgroundColor: Colors.blue,
+                          backgroundImage: NetworkImage(
+                              'https://res.cloudinary.com/andrew92/image/upload/v1627267361/bookit/avatars/wzo8vufntfgd2oyyzp0n.png'),
+                        ),
                   Positioned(
                     right: 5,
                     bottom: 10,
-                    child: Icon(Icons.add_a_photo),
+                    child: InkWell(
+                        onTap: selectedImage, child: Icon(Icons.add_a_photo)),
                   )
                 ],
               ),
@@ -42,6 +97,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: 20,
               ),
               TextField(
+                controller: _fullNameController,
                 decoration: InputDecoration(
                   filled: true,
                   hintText: 'Enter your full name',
@@ -59,6 +115,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: 20,
               ),
               TextField(
+                controller: _userNameController,
                 decoration: InputDecoration(
                   filled: true,
                   hintText: 'Enter your username',
@@ -76,6 +133,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: 20,
               ),
               TextField(
+                controller: _emailController,
                 decoration: InputDecoration(
                   filled: true,
                   hintText: 'Enter your email',
@@ -93,6 +151,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: 20,
               ),
               TextField(
+                controller: _passwordController,
                 obscureText: hidePassword,
                 decoration: InputDecoration(
                   filled: true,
@@ -126,16 +185,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: Center(
                   child: InkWell(
                     onTap: () {
-                      print('wow');
+                      signUpUser();
+                      _passwordController.clear();
                     },
-                    child: Text(
-                      'Register',
-                      style: TextStyle(
-                        color: textButtonColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    ),
+                    child: isLoading
+                        ? Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          )
+                        : Text(
+                            'Register',
+                            style: TextStyle(
+                              color: textButtonColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
                   ),
                 ),
               ),
@@ -158,7 +224,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           builder: (context) => LoginScreen()));
                     },
                     child: Text(
-                      'Sign Up',
+                      'Sign In',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,

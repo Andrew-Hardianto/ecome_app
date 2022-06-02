@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "50700194989",
+    "firebase_url": "https://clothing-db-a092e.firebaseio.com",
+    "project_id": "clothing-db-a092e",
+    "storage_bucket": "clothing-db-a092e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:50700194989:android:1506f9364ec9608868e224",
+        "android_client_info": {
+          "package_name": "com.example.ecome_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "50700194989-0qne0tcqvcr99l5ql52p1apbots77jst.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAl_gZaS-TFnxLkIip1pWqLzJArcr9JEks"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "50700194989-0qne0tcqvcr99l5ql52p1apbots77jst.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

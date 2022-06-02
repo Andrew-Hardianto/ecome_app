@@ -1,4 +1,5 @@
 import 'package:ecome_app/const.dart';
+import 'package:ecome_app/controllers/auth_controllers.dart';
 import 'package:ecome_app/views/screen/auth/sign_up.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +12,34 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // final String email;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
   bool hidePassword = true;
+  bool isLoading = false;
+
+  submitLogin() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    String res = await AuthController().loginUser(
+      _emailController.text,
+      _passwordController.text,
+    );
+
+    setState(() {
+      isLoading = false;
+    });
+
+    if (res != 'success') {
+      return showSnackbar(res, context, Colors.red[900]);
+    } else {
+      _emailController.clear();
+      return showSnackbar(
+          'Congratulations account has been created', context, Colors.green);
+    }
+  }
 
   // const LoginScreen({
   @override
@@ -24,6 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
+              controller: _emailController,
               decoration: InputDecoration(
                   filled: true,
                   hintText: 'Enter your email',
@@ -40,6 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 15,
             ),
             TextField(
+              controller: _passwordController,
               obscureText: hidePassword,
               decoration: InputDecoration(
                 filled: true,
@@ -73,16 +102,23 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Center(
                 child: InkWell(
                   onTap: () {
-                    print('wow');
+                    submitLogin();
+                    _passwordController.clear();
                   },
-                  child: Text(
-                    'Login',
-                    style: TextStyle(
-                      color: textButtonColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  ),
+                  child: isLoading
+                      ? Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ),
+                        )
+                      : Text(
+                          'Login',
+                          style: TextStyle(
+                            color: textButtonColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
                 ),
               ),
             ),
