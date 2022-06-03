@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:ecome_app/const.dart';
 import 'package:ecome_app/controllers/auth_controllers.dart';
+import 'package:ecome_app/utils/snackbar.dart';
 import 'package:ecome_app/views/screen/auth/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -50,14 +51,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
     });
 
     if (res != 'success') {
-      return showSnackbar(res, context, Colors.red[900]);
+      return showSnackbarError(res, context);
     } else {
       _fullNameController.clear();
       _userNameController.clear();
       _emailController.clear();
       _image!.clear();
-      return showSnackbar(
-          'Congratulations account has been created', context, Colors.green);
+      return showSnackbarSuccess(
+          'Congratulations account has been created', context);
     }
   }
 

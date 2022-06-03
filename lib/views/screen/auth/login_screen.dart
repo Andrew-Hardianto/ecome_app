@@ -1,6 +1,9 @@
 import 'package:ecome_app/const.dart';
 import 'package:ecome_app/controllers/auth_controllers.dart';
+import 'package:ecome_app/utils/snackbar.dart';
+import 'package:ecome_app/views/screen/auth/forgot_password_screen.dart';
 import 'package:ecome_app/views/screen/auth/sign_up.dart';
+import 'package:ecome_app/views/screen/bottom_navbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -33,11 +36,11 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     if (res != 'success') {
-      return showSnackbar(res, context, Colors.red[900]);
+      return showSnackbarError(res, context);
     } else {
       _emailController.clear();
-      return showSnackbar(
-          'Congratulations account has been created', context, Colors.green);
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (BuildContext context) => BottomNavbar()));
     }
   }
 
@@ -122,6 +125,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 20,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -149,6 +155,22 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 )
               ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => ForgotPasswordScreen()));
+              },
+              child: Text(
+                'Forgot Password ?',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
+              ),
             )
           ],
         ),

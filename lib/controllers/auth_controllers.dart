@@ -72,6 +72,10 @@ class AuthController {
       } else {
         res = 'please fields must not be empty!';
       }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        res = 'Email already taken!';
+      }
     } catch (e) {
       res = e.toString();
     }
@@ -95,18 +99,35 @@ class AuthController {
         res = 'please fields must not be empty!';
       }
       return res;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'wrong-password') {
+        res = 'Wrong password provided for that email';
+      } else if (e.code == 'invalid-email') {
+        res = 'No user found for that email';
+      }
     } catch (e) {
       res = e.toString();
     }
   }
-}
 
-showSnackbar(String content, BuildContext context, color) {
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    content: Text(
-      content,
-      style: TextStyle(color: Colors.white),
-    ),
-    backgroundColor: color,
-  ));
+// function fotgot password
+  forgotPassword(String email) async {
+    String res = '';
+    try {
+      if (email.isNotEmpty) {
+        await firebaseAuth.sendPasswordResetEmail(email: email);
+        res = 'success';
+      } else {
+        res = 'Field email must not be empty!';
+      }
+    } on FirebaseAuthException catch (e) {
+      print(e.code);
+      if (e.code == 'invalid-email') {
+        res = 'No user found for that email';
+      }
+    } catch (e) {
+      res = e.toString();
+    }
+    return res;
+  }
 }
