@@ -1,5 +1,9 @@
+import 'package:ecome_app/models/clothes.dart';
+import 'package:ecome_app/views/screen/widget/all_products.dart';
+import 'package:ecome_app/views/screen/widget/category.dart';
 import 'package:ecome_app/views/screen/widget/category_list.dart';
 import 'package:ecome_app/views/screen/widget/custom_app_bar.dart';
+import 'package:ecome_app/views/screen/widget/products.dart';
 import 'package:ecome_app/views/screen/widget/searchbar.dart';
 import 'package:ecome_app/views/screen/widget/tag.dart';
 import 'package:flutter/material.dart';
@@ -12,13 +16,18 @@ class HomeScreeen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          CustomAppBar(),
-          Searchbar(),
-          TagList(),
-          CategoryList(),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomAppBar(),
+            Searchbar(),
+            TagList(),
+            Category(),
+            CategoryList(),
+            AllProducts(),
+          ],
+        ),
       ),
     );
   }
