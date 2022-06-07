@@ -1,17 +1,22 @@
 import 'package:ecome_app/models/clothes.dart';
+import 'package:ecome_app/provider/products.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
 
 class DetailPage extends StatelessWidget {
-  final Clothes clothes;
-
-  DetailPage(this.clothes);
+  static const String id = 'detailPage';
 
   @override
   Widget build(BuildContext context) {
+    final productData = Provider.of<Products>(context);
+    final productId = ModalRoute.of(context)!.settings.arguments as String;
+    final productAttr = productData.findById(productId);
+
     return Scaffold(
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Stack(
             children: [
@@ -20,7 +25,7 @@ class DetailPage extends StatelessWidget {
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage(
-                      clothes.imageUrl.toString(),
+                      '${productAttr.imageUrl}',
                     ),
                     fit: BoxFit.fitHeight,
                   ),
@@ -55,7 +60,7 @@ class DetailPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  clothes.productName.toString(),
+                  productAttr.title,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 22,
@@ -71,6 +76,15 @@ class DetailPage extends StatelessWidget {
               ],
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+            child: Text(
+              productAttr.description,
+              style: TextStyle(
+                fontSize: 14,
+              ),
+            ),
+          )
         ],
       ),
     );

@@ -23,6 +23,10 @@ class Products with ChangeNotifier {
     ),
   ];
 
+  Product findById(String productId) {
+    return _products.firstWhere((element) => element.id == productId);
+  }
+
   List<Product> get products {
     return _products;
   }
