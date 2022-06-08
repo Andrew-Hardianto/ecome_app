@@ -81,8 +81,9 @@ class DetailPage extends StatelessWidget {
             child: Text(
               productAttr.description,
               style: TextStyle(
-                fontSize: 14,
-              ),
+                  fontSize: 14,
+                  color: Colors.grey.withOpacity(0.7),
+                  height: 1.7),
             ),
           )
         ],
