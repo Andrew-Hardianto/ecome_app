@@ -1,3 +1,4 @@
+import 'package:ecome_app/views/screen/cart_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -46,9 +47,15 @@ class CustomAppBar extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Icon(
-                  Icons.shopping_cart_checkout_outlined,
-                  color: Colors.grey,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => CartScreen()));
+                  },
+                  child: Icon(
+                    Icons.shopping_cart_checkout_outlined,
+                    color: Colors.grey,
+                  ),
                 ),
               ),
               Positioned(

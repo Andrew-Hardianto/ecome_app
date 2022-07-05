@@ -1,3 +1,4 @@
+import 'package:ecome_app/views/screen/feed_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -30,9 +31,15 @@ class CategoryList extends StatelessWidget {
                 decoration: BoxDecoration(
                     color: Colors.greenAccent[200],
                     borderRadius: BorderRadius.circular(10)),
-                child: Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.white,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => FeedScreen()));
+                  },
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ],
