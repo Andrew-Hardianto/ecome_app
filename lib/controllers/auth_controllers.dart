@@ -1,15 +1,33 @@
+import 'dart:convert';
 import 'dart:typed_data';
+import 'package:ecome_app/utils/snackbar.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:ecome_app/const.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jwt_decode_full/jwt_decode_full.dart';
 
 class AuthController {
-  // function pick image
+// http
+  static var client = http.Client();
 
+  // Header
+  Map<String, String> requestHeaders = {
+    'Content-Type': 'application/x-www-form-urlencoded'
+  };
+
+  // Create storage
+  final storage = new FlutterSecureStorage();
+
+  saveStorage(String key, String value) async {
+    await storage.write(key: key, value: value);
+  }
+
+  // function pick image
   pickImage(ImageSource source) async {
     final ImagePicker _imagePicker = ImagePicker();
 
@@ -107,6 +125,54 @@ class AuthController {
       }
     } catch (e) {
       res = e.toString();
+    }
+  }
+
+  // login user
+  signIn(String email, String password) async {
+    final res;
+    // Body
+    Map<String, String> bodyData = {
+      'grant_type': 'password',
+      'client_id': 'git-client',
+      'username': email,
+      'password': password
+    };
+
+    print({email, password});
+    final url = Uri.parse(
+        'https://keycloak-dev.gitsolutions.id/auth/realms/GIT/protocol/openid-connect/token');
+
+    try {
+      var resp = await http.post(url, headers: requestHeaders, body: bodyData);
+
+      // print({resp.body, resp.statusCode});
+      if (resp.statusCode == 200) {
+        res = jsonDecode(resp.body);
+        final jwtData = jwtDecode(res['access_token']);
+
+        Map<String, String> keyJson = {
+          "tenantId": jwtData.payload['tenant_id'][0],
+          "urlApi": jwtData.payload['instance_api'][0],
+          "accessToken": res['access_token']
+        };
+
+        // print(jwtData.payload);
+        saveStorage('ACT@KN2', res['access_token']);
+        saveStorage('RF@S!TK', res['refresh_token']);
+        saveStorage('SPS!#WU', keyJson.toString());
+        // Map<String, String> allValues = await storage.readAll();
+        final allValues = await storage.read(key: 'SPS!#WU');
+        print({'storage': allValues});
+        return res;
+      } else {
+        res = jsonDecode(resp.body);
+        print(res);
+        return res;
+      }
+      // print({'resssss': res});
+    } catch (e) {
+      print(e);
     }
   }
 

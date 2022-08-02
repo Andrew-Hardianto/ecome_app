@@ -19,6 +19,7 @@ class _FeedsProductsState extends State<FeedsProducts> {
     final products = Provider.of<Product>(context);
 
     return Container(
+      width: MediaQuery.of(context).size.width - 40,
       margin: EdgeInsets.only(left: 5, right: 5),
       child: GestureDetector(
         onTap: () {

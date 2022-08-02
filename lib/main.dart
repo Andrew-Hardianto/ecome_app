@@ -42,8 +42,8 @@ class MyApp extends StatelessWidget {
         // theme: ThemeData.light().copyWith(
         //   scaffoldBackgroundColor: Colors.white,
         // ),
-        // home: LoginScreen(),
-        home: BottomNavbar(),
+        home: LoginScreen(),
+        // home: BottomNavbar(),
         routes: {
           DetailPage.id: (context) => DetailPage(),
         },

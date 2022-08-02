@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:ecome_app/const.dart';
 import 'package:ecome_app/controllers/auth_controllers.dart';
 import 'package:ecome_app/utils/snackbar.dart';
@@ -8,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -17,16 +20,35 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final storage = new FlutterSecureStorage();
 
   bool hidePassword = true;
   bool isLoading = false;
+  String allV = '';
+
+  @override
+  void initState() {
+    super.initState();
+    // getStorage();
+  }
+
+  getStorage() async {
+    final allValues = await storage.read(key: 'SPS!#WU');
+    print(allValues);
+    return allV = allValues!;
+  }
 
   submitLogin() async {
     setState(() {
       isLoading = true;
     });
 
-    String res = await AuthController().loginUser(
+    // String res = await AuthController().loginUser(
+    //   _emailController.text,
+    //   _passwordController.text,
+    // );
+
+    final res = await AuthController().signIn(
       _emailController.text,
       _passwordController.text,
     );
@@ -35,13 +57,17 @@ class _LoginScreenState extends State<LoginScreen> {
       isLoading = false;
     });
 
-    if (res != 'success') {
-      return showSnackbarError(res, context);
-    } else {
-      _emailController.clear();
-      Navigator.of(context).push(
-          MaterialPageRoute(builder: (BuildContext context) => BottomNavbar()));
-    }
+    print(res);
+
+    // if (res != 'success') {
+    // return showSnackbarError(res!, context);
+    // } else {
+    //   _emailController.clear();
+    //   Navigator.of(context).push(
+    //       MaterialPageRoute(builder: (BuildContext context) => BottomNavbar()));
+    // }
+    _emailController.clear();
+    isLoading = false;
   }
 
   // const LoginScreen({
@@ -171,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   fontSize: 15,
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
