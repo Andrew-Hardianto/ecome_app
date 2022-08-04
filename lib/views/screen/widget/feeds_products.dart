@@ -1,4 +1,5 @@
 import 'package:badges/badges.dart';
+import 'package:ecome_app/controllers/main_service.dart';
 import 'package:ecome_app/models/products.dart';
 import 'package:ecome_app/provider/products.dart';
 import 'package:ecome_app/views/screen/detail/detail_page.dart';
@@ -17,7 +18,6 @@ class _FeedsProductsState extends State<FeedsProducts> {
   @override
   Widget build(BuildContext context) {
     final products = Provider.of<Product>(context);
-
     return Container(
       width: MediaQuery.of(context).size.width - 40,
       margin: EdgeInsets.only(left: 5, right: 5),

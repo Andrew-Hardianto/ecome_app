@@ -2,15 +2,15 @@ import 'dart:convert';
 
 import 'package:ecome_app/const.dart';
 import 'package:ecome_app/controllers/auth_controllers.dart';
+import 'package:ecome_app/controllers/main_service.dart';
 import 'package:ecome_app/utils/snackbar.dart';
 import 'package:ecome_app/views/screen/auth/forgot_password_screen.dart';
 import 'package:ecome_app/views/screen/auth/sign_up.dart';
 import 'package:ecome_app/views/screen/bottom_navbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:jwt_decode_full/jwt_decode_full.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -20,7 +20,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final storage = new FlutterSecureStorage();
+  var mainService = MainService();
 
   bool hidePassword = true;
   bool isLoading = false;
@@ -29,13 +29,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    // getStorage();
-  }
-
-  getStorage() async {
-    final allValues = await storage.read(key: 'SPS!#WU');
-    print(allValues);
-    return allV = allValues!;
   }
 
   submitLogin() async {
@@ -52,21 +45,35 @@ class _LoginScreenState extends State<LoginScreen> {
       _emailController.text,
       _passwordController.text,
     );
+    var data = jsonDecode(res.body);
 
     setState(() {
       isLoading = false;
     });
 
-    print(res);
+    print({'status', res.body});
 
-    // if (res != 'success') {
-    // return showSnackbarError(res!, context);
-    // } else {
-    //   _emailController.clear();
-    //   Navigator.of(context).push(
-    //       MaterialPageRoute(builder: (BuildContext context) => BottomNavbar()));
-    // }
-    _emailController.clear();
+    if (res.statusCode == 200) {
+      final jwtData = jwtDecode(data['access_token']);
+
+      final keyJson = {
+        "tenantId": jwtData.payload['tenant_id'][0],
+        "urlApi": jwtData.payload['instance_api'][0],
+        "accessToken": data['access_token']
+      };
+
+      mainService.saveStorage('ACT@KN2', data['access_token']);
+      mainService.saveStorage('RF@S!TK', data['refresh_token']);
+      mainService.saveStorage('SPS!#WU', keyJson.toString());
+      mainService.saveStorage('G!T@FTR', mainService.saveRandomColor());
+
+      _emailController.clear();
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (BuildContext context) => BottomNavbar()));
+    } else {
+      return showSnackbarError(data['error_description'], context);
+    }
+
     isLoading = false;
   }
 

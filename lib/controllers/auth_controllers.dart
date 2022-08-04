@@ -130,7 +130,7 @@ class AuthController {
 
   // login user
   signIn(String email, String password) async {
-    final res;
+    var res;
     // Body
     Map<String, String> bodyData = {
       'grant_type': 'password',
@@ -147,32 +147,10 @@ class AuthController {
       var resp = await http.post(url, headers: requestHeaders, body: bodyData);
 
       // print({resp.body, resp.statusCode});
-      if (resp.statusCode == 200) {
-        res = jsonDecode(resp.body);
-        final jwtData = jwtDecode(res['access_token']);
-
-        Map<String, String> keyJson = {
-          "tenantId": jwtData.payload['tenant_id'][0],
-          "urlApi": jwtData.payload['instance_api'][0],
-          "accessToken": res['access_token']
-        };
-
-        // print(jwtData.payload);
-        saveStorage('ACT@KN2', res['access_token']);
-        saveStorage('RF@S!TK', res['refresh_token']);
-        saveStorage('SPS!#WU', keyJson.toString());
-        // Map<String, String> allValues = await storage.readAll();
-        final allValues = await storage.read(key: 'SPS!#WU');
-        print({'storage': allValues});
-        return res;
-      } else {
-        res = jsonDecode(resp.body);
-        print(res);
-        return res;
-      }
-      // print({'resssss': res});
+      return res = resp;
     } catch (e) {
       print(e);
+      return res = e;
     }
   }
 
