@@ -139,7 +139,6 @@ class AuthController {
       'password': password
     };
 
-    print({email, password});
     final url = Uri.parse(
         'https://keycloak-dev.gitsolutions.id/auth/realms/GIT/protocol/openid-connect/token');
 
@@ -149,7 +148,6 @@ class AuthController {
       // print({resp.body, resp.statusCode});
       return res = resp;
     } catch (e) {
-      print(e);
       return res = e;
     }
   }

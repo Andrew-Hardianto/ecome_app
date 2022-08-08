@@ -56,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (res.statusCode == 200) {
       final jwtData = jwtDecode(data['access_token']);
 
-      final keyJson = {
+      Map<String, dynamic> keyJson = {
         "tenantId": jwtData.payload['tenant_id'][0],
         "urlApi": jwtData.payload['instance_api'][0],
         "accessToken": data['access_token']
@@ -64,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       mainService.saveStorage('ACT@KN2', data['access_token']);
       mainService.saveStorage('RF@S!TK', data['refresh_token']);
-      mainService.saveStorage('SPS!#WU', keyJson.toString());
+      mainService.saveStorage('SPS!#WU', jsonEncode(keyJson));
       mainService.saveStorage('G!T@FTR', mainService.saveRandomColor());
 
       _emailController.clear();

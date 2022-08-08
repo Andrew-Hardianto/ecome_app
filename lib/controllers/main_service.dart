@@ -1,9 +1,16 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
 
 class MainService {
+  static var client = http.Client();
+
+  // Header
+  Map<String, String> requestHeaders = {'Content-Type': 'application/json'};
+
   var key = Key.fromUtf8('1234567890987654');
   var iv = IV.fromUtf8('1234567890987654');
   final storage = new FlutterSecureStorage();
@@ -32,9 +39,10 @@ class MainService {
     "#E49FEA"
   ];
 
-  urlApi() {
-    final keyJson = storage.read(key: 'SPS!#WU');
-    return keyJson;
+  urlApi() async {
+    final String? keyJson = await storage.read(key: 'SPS!#WU');
+    final url = jsonDecode(keyJson!);
+    return url['urlApi'].toString();
   }
 
   encrypt(String plainText) {
@@ -68,5 +76,35 @@ class MainService {
     final randomColorAvatar = colors[_random.nextInt(colors.length)];
     final color = encrypt(randomColorAvatar);
     return color;
+  }
+
+  getAuthoritiesToken() {}
+
+  getAccessToken() async {
+    final String? keyJson = await storage.read(key: 'SPS!#WU');
+    final url = jsonDecode(keyJson!);
+    return url['accessToken'].toString();
+  }
+
+  getTenantId() async {
+    final String? keyJson = await storage.read(key: 'SPS!#WU');
+    final url = jsonDecode(keyJson!);
+    return url['tenantId'].toString();
+  }
+
+  getUrl(String url, Function callback) async {
+    // Body
+    Map<String, String> bodyData = {
+      'X-TenantID': await this.getTenantId(),
+      'Authorization': 'Bearer ' + await this.getAccessToken(),
+      "AuthorizationToken": await this.getAuthoritiesToken() ?? ''
+    };
+
+    var res = await http
+        .get(Uri.parse(url), headers: bodyData)
+        .then((data) => callback(data));
+    // .catchError((err) => print(err));
+
+    return res;
   }
 }
