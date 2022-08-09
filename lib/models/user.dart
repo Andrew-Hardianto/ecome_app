@@ -1,7 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+
 class User {
-  final String token;
   final bool active;
   final String alias;
   final String assignmentId;
@@ -29,7 +30,6 @@ class User {
   final String timezone;
 
   User({
-    required this.token,
     required this.active,
     required this.alias,
     required this.assignmentId,
@@ -59,7 +59,6 @@ class User {
 
   Map<String, dynamic> toMap() {
     return {
-      'token': token,
       'active': active,
       'alias': alias,
       'assignmentId': assignmentId,
@@ -90,7 +89,6 @@ class User {
 
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
-      token: map['token'] ?? '',
       active: map['active'] ?? false,
       alias: map['alias'] ?? '',
       assignmentId: map['assignmentId'] ?? '',
@@ -122,4 +120,16 @@ class User {
   String toJson() => jsonEncode(toMap());
 
   factory User.fromJson(String source) => User.fromMap(jsonDecode(source));
+}
+
+class ProfileSettingMenu {
+  final Icon menuIcon;
+  final String name;
+  final String url;
+
+  ProfileSettingMenu({
+    required this.menuIcon,
+    required this.name,
+    required this.url,
+  });
 }

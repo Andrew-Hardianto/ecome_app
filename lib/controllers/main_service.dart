@@ -1,4 +1,5 @@
 import 'dart:convert';
+// import 'dart:html';
 import 'dart:math';
 
 import 'package:encrypt/encrypt.dart';
@@ -41,8 +42,10 @@ class MainService {
 
   urlApi() async {
     final String? keyJson = await storage.read(key: 'SPS!#WU');
-    final url = jsonDecode(keyJson!);
-    return url['urlApi'].toString();
+    if (keyJson != null) {
+      final url = jsonDecode(keyJson)['urlApi'];
+      return url;
+    }
   }
 
   encrypt(String plainText) {
@@ -82,14 +85,14 @@ class MainService {
 
   getAccessToken() async {
     final String? keyJson = await storage.read(key: 'SPS!#WU');
-    final url = jsonDecode(keyJson!);
-    return url['accessToken'].toString();
+    final url = jsonDecode(keyJson!)['accessToken'];
+    return url.toString();
   }
 
   getTenantId() async {
     final String? keyJson = await storage.read(key: 'SPS!#WU');
-    final url = jsonDecode(keyJson!);
-    return url['tenantId'].toString();
+    final url = jsonDecode(keyJson!)['tenantId'];
+    return url.toString();
   }
 
   getUrl(String url, Function callback) async {

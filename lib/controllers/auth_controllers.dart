@@ -145,7 +145,6 @@ class AuthController {
     try {
       var resp = await http.post(url, headers: requestHeaders, body: bodyData);
 
-      // print({resp.body, resp.statusCode});
       return res = resp;
     } catch (e) {
       return res = e;

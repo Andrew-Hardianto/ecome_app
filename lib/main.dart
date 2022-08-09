@@ -1,5 +1,6 @@
-import 'package:ecome_app/const.dart';
 import 'package:ecome_app/provider/products.dart';
+import 'package:ecome_app/provider/user_provider.dart';
+import 'package:ecome_app/router.dart';
 import 'package:ecome_app/views/screen/auth/login_screen.dart';
 import 'package:ecome_app/views/screen/bottom_navbar.dart';
 import 'package:ecome_app/views/screen/detail/detail_page.dart';
@@ -34,6 +35,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (_) => Products(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => UserProvider(),
         )
       ],
       child: MaterialApp(
@@ -42,6 +46,7 @@ class MyApp extends StatelessWidget {
         // theme: ThemeData.light().copyWith(
         //   scaffoldBackgroundColor: Colors.white,
         // ),
+        onGenerateRoute: ((settings) => generateRoute(settings)),
         home: LoginScreen(),
         // home: BottomNavbar(),
         routes: {
