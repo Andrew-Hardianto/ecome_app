@@ -4,30 +4,30 @@ import 'package:flutter/material.dart';
 
 class User {
   final bool active;
-  final String alias;
-  final String assignmentId;
-  final String authoritiesToken;
-  final String companyId;
-  final String companyName;
-  final String companyPicture;
+  final String? alias;
+  final String? assignmentId;
+  final String? authoritiesToken;
+  final String? companyId;
+  final String? companyName;
+  final String? companyPicture;
   final bool dailyMood;
-  final String employeeId;
-  final String employeeNo;
-  final String employmentId;
-  final String fullName;
+  final String? employeeId;
+  final String? employeeNo;
+  final String? employmentId;
+  final String? fullName;
   final bool haveAPin;
   final bool haveCheckIn;
   final bool isDailyMood;
   final bool isHaveAPin;
   final bool isOffShift;
-  final String moodValue;
+  final String? moodValue;
   final bool offShift;
-  final String organizationName;
-  final String packageName;
-  final String positionName;
-  final String profilePicture;
-  final String shiftInDateTime;
-  final String timezone;
+  final String? organizationName;
+  final String? packageName;
+  final String? positionName;
+  final String? profilePicture;
+  final String? shiftInDateTime;
+  final String? timezone;
 
   User({
     required this.active,
@@ -90,30 +90,30 @@ class User {
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
       active: map['active'] ?? false,
-      alias: map['alias'] ?? '',
-      assignmentId: map['assignmentId'] ?? '',
-      authoritiesToken: map['authoritiesToken'] ?? '',
-      companyId: map['companyId'] ?? '',
-      companyName: map['companyName'] ?? '',
-      companyPicture: map['companyPicture'] ?? '',
+      alias: map['alias'] ?? null,
+      assignmentId: map['assignmentId'] ?? null,
+      authoritiesToken: map['authoritiesToken'] ?? null,
+      companyId: map['companyId'] ?? null,
+      companyName: map['companyName'] ?? null,
+      companyPicture: map['companyPicture'] ?? null,
       dailyMood: map['dailyMood'] ?? false,
-      employeeId: map['employeeId'] ?? '',
-      employeeNo: map['employeeNo'] ?? '',
-      employmentId: map['employmentId'] ?? '',
-      fullName: map['fullName'] ?? '',
+      employeeId: map['employeeId'] ?? null,
+      employeeNo: map['employeeNo'] ?? null,
+      employmentId: map['employmentId'] ?? null,
+      fullName: map['fullName'] ?? null,
       haveAPin: map['haveAPin'] ?? false,
       haveCheckIn: map['haveCheckIn'] ?? false,
       isDailyMood: map['isDailyMood'] ?? false,
       isHaveAPin: map['isHaveAPin'] ?? false,
       isOffShift: map['isOffShift'] ?? false,
-      moodValue: map['moodValue'] ?? '',
+      moodValue: map['moodValue'] ?? null,
       offShift: map['offShift'] ?? false,
-      organizationName: map['organizationName'] ?? '',
-      packageName: map['packageName'] ?? '',
-      positionName: map['positionName'] ?? '',
-      profilePicture: map['profilePicture'] ?? '',
-      shiftInDateTime: map['shiftInDateTime'] ?? '',
-      timezone: map['timezone'] ?? '',
+      organizationName: map['organizationName'] ?? null,
+      packageName: map['packageName'] ?? null,
+      positionName: map['positionName'] ?? null,
+      profilePicture: map['profilePicture'] ?? null,
+      shiftInDateTime: map['shiftInDateTime'] ?? null,
+      timezone: map['timezone'] ?? null,
     );
   }
 

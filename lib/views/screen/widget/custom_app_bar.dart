@@ -1,14 +1,14 @@
+import 'package:ecome_app/provider/theme_provider.dart';
 import 'package:ecome_app/views/screen/cart_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
 
 class CustomAppBar extends StatelessWidget {
   const CustomAppBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final bool themeProvider = Provider.of<ThemeProvider>(context).isDarkMode;
     return Container(
       padding: EdgeInsets.only(top: 30, left: 30, right: 30),
       child: Row(
@@ -20,9 +20,9 @@ class CustomAppBar extends StatelessWidget {
                 TextSpan(
                   text: 'Howdy, What Are You\nLooking For ?',
                   style: TextStyle(
-                      color: Colors.black,
                       fontSize: 22,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,
+                      color: themeProvider ? Colors.white : Colors.black),
                 ),
                 TextSpan(text: ' 👀', style: TextStyle(fontSize: 24)),
               ],
@@ -33,7 +33,6 @@ class CustomAppBar extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(

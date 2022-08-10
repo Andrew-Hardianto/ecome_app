@@ -1,4 +1,5 @@
 import 'package:ecome_app/provider/products.dart';
+import 'package:ecome_app/provider/theme_provider.dart';
 import 'package:ecome_app/provider/user_provider.dart';
 import 'package:ecome_app/router.dart';
 import 'package:ecome_app/views/screen/auth/login_screen.dart';
@@ -20,7 +21,22 @@ void main() async {
       // ),
       );
 
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => Products(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => UserProvider(),
+        ),
+        ChangeNotifierProvider<ThemeProvider>(
+          create: (_) => ThemeProvider(),
+        ),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -29,30 +45,27 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (_) => Products(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => UserProvider(),
-        )
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Ecome App',
-        // theme: ThemeData.light().copyWith(
-        //   scaffoldBackgroundColor: Colors.white,
-        // ),
-        onGenerateRoute: ((settings) => generateRoute(settings)),
-        home: LoginScreen(),
-        // home: BottomNavbar(),
-        routes: {
-          DetailPage.id: (context) => DetailPage(),
-        },
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness:
+            themeProvider.isDarkMode ? Brightness.light : Brightness.dark,
       ),
+    );
+
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Ecome App',
+      themeMode: themeProvider.themeMode,
+      theme: MyTheme.lightTheme,
+      darkTheme: MyTheme.darkTheme,
+      onGenerateRoute: ((settings) => generateRoute(settings)),
+      home: LoginScreen(),
+      // home: BottomNavbar(),
+      routes: {
+        DetailPage.id: (context) => DetailPage(),
+      },
     );
   }
 }

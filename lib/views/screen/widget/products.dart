@@ -28,6 +28,7 @@ class ProductItem extends StatelessWidget {
       child: GestureDetector(
         onTap: () {},
         child: Card(
+          shadowColor: Theme.of(context).backgroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),

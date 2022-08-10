@@ -12,16 +12,17 @@ class ProfileService {
   var randomColor;
 
   getProfile(BuildContext context) async {
-    var url = await mainService.urlApi() + '/api/v1/user/profile';
+    var url = await mainService.urlApi() + '/api/v1/user/profile-detail';
 
     data(res) async {
       if (res.statusCode == 200) {
-        // profile = jsonDecode(res.body);
-        var userProvider = Provider.of<UserProvider>(context, listen: false);
-        userProvider.setUser(res.body);
+        var profile = jsonDecode(res.body);
+        // var userProvider = Provider.of<UserProvider>(context, listen: false);
+        // userProvider.setUser(res.body);
+        print({'profile-detail': profile});
         randomColor = await mainService.getRandomColor();
       } else {
-        print(res.body['error_description']);
+        mainService.errorHandling(res, context);
       }
     }
 
@@ -43,6 +44,21 @@ class ProfileService {
       menuIcon: Icon(Icons.facebook),
       name: 'Social Media',
       url: '/social-media',
+    ),
+    ProfileSettingMenu(
+      menuIcon: Icon(Icons.dark_mode),
+      name: 'Dark Mode',
+      url: '',
+    ),
+    ProfileSettingMenu(
+      menuIcon: Icon(Icons.login_outlined),
+      name: 'Check In',
+      url: '',
+    ),
+    ProfileSettingMenu(
+      menuIcon: Icon(Icons.logout_outlined),
+      name: 'Check Out',
+      url: '',
     ),
   ];
 }

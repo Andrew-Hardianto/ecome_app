@@ -68,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
       mainService.saveStorage('G!T@FTR', mainService.saveRandomColor());
 
       _emailController.clear();
-      Navigator.of(context).push(
+      Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (BuildContext context) => BottomNavbar()));
     } else {
       return showSnackbarError(data['error_description'], context);

@@ -2,9 +2,14 @@ import 'dart:convert';
 // import 'dart:html';
 import 'dart:math';
 
-import 'package:encrypt/encrypt.dart';
+import 'package:ecome_app/provider/theme_provider.dart';
+import 'package:ecome_app/views/screen/widget/snackbar_error.dart';
+import 'package:encrypt/encrypt.dart' as encrypts;
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class MainService {
   static var client = http.Client();
@@ -12,8 +17,8 @@ class MainService {
   // Header
   Map<String, String> requestHeaders = {'Content-Type': 'application/json'};
 
-  var key = Key.fromUtf8('1234567890987654');
-  var iv = IV.fromUtf8('1234567890987654');
+  var key = encrypts.Key.fromUtf8('1234567890987654');
+  var iv = encrypts.IV.fromUtf8('1234567890987654');
   final storage = new FlutterSecureStorage();
   final _random = new Random();
 
@@ -49,14 +54,14 @@ class MainService {
   }
 
   encrypt(String plainText) {
-    final encrypter = Encrypter(AES(key));
+    final encrypter = encrypts.Encrypter(encrypts.AES(key));
 
     final encryptedStr = encrypter.encrypt(plainText, iv: iv);
     return encryptedStr.base16.toString();
   }
 
   decrypt(plainText) {
-    final encrypter = Encrypter(AES(key));
+    final encrypter = encrypts.Encrypter(encrypts.AES(key));
     if (plainText != null) {
       final decrypted = encrypter.decrypt16(plainText, iv: iv);
       return decrypted;
@@ -109,5 +114,30 @@ class MainService {
     // .catchError((err) => print(err));
 
     return res;
+  }
+
+  void errorHandling(dynamic res, BuildContext context) {
+    var err = jsonDecode(res.body)["error_description"];
+    var msg = jsonDecode(res.body)["message"];
+    if (res.statusCode == 401 || res.statusCode == 400) {
+      if (msg != "") {
+        print(msg);
+        SnackBarError(context, msg);
+      } else {
+        print(err);
+        SnackBarError(context, err);
+      }
+    } else {
+      SnackBarError(context, "Can\'t connect to server. Please Contact Admin!");
+    }
+    print(res.body);
+  }
+
+  getDarkMode(BuildContext ctx) {
+    final bool darkMode =
+        Provider.of<ThemeProvider>(ctx).themeMode == ThemeMode.dark
+            ? true
+            : false;
+    return darkMode;
   }
 }
