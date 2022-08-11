@@ -1,5 +1,6 @@
 import 'package:ecome_app/provider/user_provider.dart';
 import 'package:ecome_app/views/screen/home/home_service.dart';
+import 'package:ecome_app/views/screen/widget/Sidemenu/sidemenu_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ecome_app/utils/extension.dart';
@@ -7,6 +8,7 @@ import 'package:ecome_app/utils/extension.dart';
 class SidemenuNavigation extends StatelessWidget {
   // const SidemenuNavigation({Key? key}) : super(key: key);
   final homeService = HomeService();
+  final sidemenuService = SidemenuService();
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class SidemenuNavigation extends StatelessWidget {
             height: 200,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.red, Colors.deepOrange.shade300],
+                colors: [Colors.green, Colors.green.shade200],
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 stops: [0.5, 0.9],
@@ -37,11 +39,10 @@ class SidemenuNavigation extends StatelessWidget {
                         ? CircleAvatar(
                             backgroundColor: Colors.white70,
                             minRadius: 60.0,
-                            child: CircleAvatar(
-                              radius: 50.0,
-                              backgroundImage:
-                                  NetworkImage(user.profilePicture!),
-                            ),
+                            backgroundImage: NetworkImage(user.profilePicture!),
+                            // child: CircleAvatar(
+                            //   radius: 50.0,
+                            // ),
                           )
                         : Container(
                             width: 90.0,
@@ -88,18 +89,43 @@ class SidemenuNavigation extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 SizedBox(
-                  height: MediaQuery.of(context).size.height - 270,
-                  child: ListView(children: [
-                    ListTile(
-                      leading: const Icon(Icons.access_time),
-                      title: Text('Data'),
-                      onTap: () {},
-                    ),
-                  ]),
+                  height: MediaQuery.of(context).size.height - 300,
+                  child: ListView(
+                    children: sidemenuService.menuList.map((e) {
+                      return ListTile(
+                        leading: e.menuIcon,
+                        title: Text(
+                          e.name,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.of(context).pushNamed(
+                            e.url,
+                            arguments: {'type': e.name},
+                          );
+                        },
+                      );
+                    }).toList(),
+                  ),
                 )
               ],
             ),
           ),
+          Container(
+            height: 50,
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                child: Text('Logout'),
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(primary: Colors.red),
+              ),
+            ),
+          )
         ],
       ),
     );

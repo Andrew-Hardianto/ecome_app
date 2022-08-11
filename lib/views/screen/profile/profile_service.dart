@@ -1,11 +1,9 @@
 import 'dart:convert';
 
 import 'package:ecome_app/controllers/main_service.dart';
-import 'package:ecome_app/models/user.dart';
-import 'package:ecome_app/provider/user_provider.dart';
+import 'package:ecome_app/models/menulist.dart';
 import 'package:ecome_app/views/screen/changepassword/change_password_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class ProfileService {
   final mainService = MainService();
@@ -29,35 +27,25 @@ class ProfileService {
     mainService.getUrl(url, (res) => data(res));
   }
 
-  final List<ProfileSettingMenu> menuList = [
-    ProfileSettingMenu(
+  final List<MenuList> menuList = [
+    MenuList(
       menuIcon: Icon(Icons.lock),
       name: 'Password',
       url: ChangePasswordScreen.routeName,
     ),
-    ProfileSettingMenu(
+    MenuList(
       menuIcon: Icon(Icons.pin),
       name: 'Pin',
       url: '/change-password',
     ),
-    ProfileSettingMenu(
+    MenuList(
       menuIcon: Icon(Icons.facebook),
       name: 'Social Media',
       url: '/social-media',
     ),
-    ProfileSettingMenu(
+    MenuList(
       menuIcon: Icon(Icons.dark_mode),
       name: 'Dark Mode',
-      url: '',
-    ),
-    ProfileSettingMenu(
-      menuIcon: Icon(Icons.login_outlined),
-      name: 'Check In',
-      url: '',
-    ),
-    ProfileSettingMenu(
-      menuIcon: Icon(Icons.logout_outlined),
-      name: 'Check Out',
       url: '',
     ),
   ];

@@ -27,6 +27,7 @@ class MyTheme {
     cardColor: '#121212'.toColor(),
     iconTheme: IconThemeData(color: Colors.white),
     shadowColor: Colors.white,
+    backgroundColor: '#121212'.toColor(),
   );
 
   static final lightTheme = ThemeData(
@@ -36,5 +37,6 @@ class MyTheme {
     colorScheme: ColorScheme.light(),
     cardColor: Colors.white,
     iconTheme: IconThemeData(color: Colors.black),
+    backgroundColor: Colors.white,
   );
 }

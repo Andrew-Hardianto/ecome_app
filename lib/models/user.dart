@@ -121,15 +121,3 @@ class User {
 
   factory User.fromJson(String source) => User.fromMap(jsonDecode(source));
 }
-
-class ProfileSettingMenu {
-  final Icon menuIcon;
-  final String name;
-  final String url;
-
-  ProfileSettingMenu({
-    required this.menuIcon,
-    required this.name,
-    required this.url,
-  });
-}
