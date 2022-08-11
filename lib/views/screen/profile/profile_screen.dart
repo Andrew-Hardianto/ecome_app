@@ -57,11 +57,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ? CircleAvatar(
                               backgroundColor: Colors.white70,
                               minRadius: 60.0,
-                              child: CircleAvatar(
-                                radius: 50.0,
-                                backgroundImage:
-                                    NetworkImage(user.profilePicture!),
-                              ),
+                              backgroundImage:
+                                  NetworkImage(user.profilePicture!),
                             )
                           : Container(
                               width: 100.0,

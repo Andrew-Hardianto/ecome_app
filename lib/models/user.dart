@@ -121,3 +121,36 @@ class User {
 
   factory User.fromJson(String source) => User.fromMap(jsonDecode(source));
 }
+
+class PurposeCheckInOut {
+  final String? description;
+  final String? name;
+  final String? value;
+
+  PurposeCheckInOut({
+    required this.description,
+    required this.name,
+    required this.value,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'description': description,
+      'name': name,
+      'value': value,
+    };
+  }
+
+  factory PurposeCheckInOut.fromMap(Map<String, dynamic> map) {
+    return PurposeCheckInOut(
+      description: map['description'] ?? null,
+      name: map['name'] ?? null,
+      value: map['value'] ?? null,
+    );
+  }
+
+  String toJson() => jsonEncode(toMap());
+
+  factory PurposeCheckInOut.fromJson(String source) =>
+      PurposeCheckInOut.fromMap(jsonDecode(source));
+}

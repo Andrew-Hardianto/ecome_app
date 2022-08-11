@@ -1,3 +1,4 @@
+import 'package:ecome_app/provider/map_provider.dart';
 import 'package:ecome_app/provider/products.dart';
 import 'package:ecome_app/provider/theme_provider.dart';
 import 'package:ecome_app/provider/user_provider.dart';
@@ -23,6 +24,9 @@ void main() async {
         ),
         ChangeNotifierProvider<ThemeProvider>(
           create: (_) => ThemeProvider(),
+        ),
+        ChangeNotifierProvider<MapProvider>(
+          create: (_) => MapProvider(),
         ),
       ],
       child: MyApp(),

@@ -15,8 +15,6 @@ class ProfileService {
     data(res) async {
       if (res.statusCode == 200) {
         var profile = jsonDecode(res.body);
-        // var userProvider = Provider.of<UserProvider>(context, listen: false);
-        // userProvider.setUser(res.body);
         print({'profile-detail': profile});
         randomColor = await mainService.getRandomColor();
       } else {
