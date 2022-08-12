@@ -1,9 +1,14 @@
+import 'dart:convert';
+// import 'dart:html';
+
+import 'package:ecome_app/controllers/main_service.dart';
 import 'package:ecome_app/views/screen/checkinout/checkinout_service.dart';
 import 'package:ecome_app/views/screen/widget/map/google_map_screen.dart';
 import 'package:ecome_app/views/screen/widget/text_appbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ecome_app/utils/extension.dart';
+import 'package:location/location.dart';
 
 class CheckinoutScreen extends StatefulWidget {
   static const String routeName = '/check-in-out';
@@ -15,23 +20,74 @@ class CheckinoutScreen extends StatefulWidget {
 
 class _CheckinoutScreenState extends State<CheckinoutScreen> {
   final checkinoutService = CheckInOutService();
+  final mainService = MainService();
+  List<dynamic> purposeList = [];
+  final TextEditingController _remarks = TextEditingController();
 
   int groupValue = 0;
-  String userLoc = 'inOffice';
+  bool userLoc = false;
+  Location _location = Location();
+
+  double lat = 0.0;
+  double lng = 0.0;
+
+  String? selectedItem;
+  var dataType;
 
   @override
   void initState() {
     super.initState();
     checkinoutService.getLocation(context);
+    getPurpose(context);
+  }
+
+  getPurpose(BuildContext context) async {
+    final url = await mainService.urlApi() +
+        '/api/v1/lookup/globalkey?name=TM_CHECKINOUT_PURPOSES';
+
+    await mainService.getUrl(url, (res) {
+      if (res.statusCode == 200) {
+        List<dynamic> resData = jsonDecode(res.body);
+        setState(() {
+          purposeList = resData;
+        });
+        return purposeList;
+      } else {
+        mainService.errorHandling(res, context);
+      }
+    });
+  }
+
+  submitData(BuildContext context) async {
+    await _location.onLocationChanged.listen((LocationData currentLocation) {
+      setState(() {
+        lat = currentLocation.latitude!;
+        lng = currentLocation.longitude!;
+      });
+    });
+
+    final strBytesLat = utf8.encode(lat.toString());
+    final base64Lat = base64.encode(strBytesLat);
+    final strBytesLng = utf8.encode(lng.toString());
+    final base64Lng = base64.encode(strBytesLng);
+
+    Map<String, dynamic> formData = {
+      "actualLatEnc": base64Lat,
+      "actualLngEnc": base64Lng,
+      "outOfOffice": userLoc,
+      "purpose": !userLoc ? '' : selectedItem,
+      "remark": !userLoc ? 'In The Office' : _remarks.text,
+      "type": dataType['type'] == 'Check In' ? 'CHECKIN' : 'CHECKOUT'
+    };
+
+    checkinoutService.submitCheckinout(context, formData);
   }
 
   @override
   Widget build(BuildContext context) {
-    final data =
+    dataType =
         ModalRoute.of(context)!.settings.arguments as Map<String, String>;
-    final type = data['type'];
-    List<String> items = ['1', '2', '3'];
-    String? selectedItem;
+    final type = dataType['type'];
 
     return Scaffold(
       appBar: AppBar(
@@ -48,14 +104,14 @@ class _CheckinoutScreenState extends State<CheckinoutScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Container(
-                height: 200,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: MapScreen(),
-              ),
+              // Container(
+              //   height: 200,
+              //   width: double.infinity,
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(10.0),
+              //   ),
+              //   child: MapScreen(),
+              // ),
               Container(
                 padding:
                     const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
@@ -75,13 +131,12 @@ class _CheckinoutScreenState extends State<CheckinoutScreen> {
                     ),
                   },
                   onValueChanged: (val) {
-                    print(val);
                     setState(() {
                       groupValue = val as int;
                       if (val == 1) {
-                        userLoc = 'outOffice';
+                        userLoc = true;
                       } else {
-                        userLoc = 'inOffice';
+                        userLoc = false;
                       }
                     });
                   },
@@ -122,16 +177,18 @@ class _CheckinoutScreenState extends State<CheckinoutScreen> {
                             ),
                           ),
                         ),
-                        items: items.map((e) {
+                        items: purposeList.map((element) {
                           return DropdownMenuItem(
-                            child: Text(e),
-                            value: e,
+                            child: Text(element['name']),
+                            value: element['value'],
                           );
                         }).toList(),
                         onChanged: (value) {
+                          print(value);
                           setState(() {
                             selectedItem = value as String?;
                           });
+                          print(value);
                         },
                         value: selectedItem,
                       ),
@@ -165,6 +222,7 @@ class _CheckinoutScreenState extends State<CheckinoutScreen> {
                         ],
                       ),
                       TextField(
+                        controller: _remarks,
                         decoration: InputDecoration(
                           hintText: 'Example : Fixing Module',
                           border: OutlineInputBorder(
@@ -191,7 +249,9 @@ class _CheckinoutScreenState extends State<CheckinoutScreen> {
                 ),
                 child: ElevatedButton(
                   child: Text('SUBMIT'),
-                  onPressed: () {},
+                  onPressed: () {
+                    submitData(context);
+                  },
                   style: ElevatedButton.styleFrom(
                     primary: Colors.transparent,
                     shadowColor: Colors.transparent,

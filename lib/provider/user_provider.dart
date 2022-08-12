@@ -41,4 +41,22 @@ class UserProvider extends ChangeNotifier {
     _user = user;
     notifyListeners();
   }
+
+  PurposeCheckInOut _purposeCheckInOut = PurposeCheckInOut(
+    description: null,
+    name: null,
+    value: null,
+  );
+
+  PurposeCheckInOut get purposeCheckInOut => _purposeCheckInOut;
+
+  // void setPurposeCheckInOut(purposeCheckInOut) {
+  //   _purposeCheckInOut = PurposeCheckInOut.fromJson(purposeCheckInOut);
+  //   notifyListeners();
+  // }
+
+  // void setPurposeCheckInOutFromModel(PurposeCheckInOut purposeCheckInOut) {
+  //   _purposeCheckInOut = purposeCheckInOut;
+  //   notifyListeners();
+  // }
 }

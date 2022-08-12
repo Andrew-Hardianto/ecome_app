@@ -116,6 +116,19 @@ class MainService {
     return res;
   }
 
+  postUrlApi(String urlApi, formData, Function callback) async {
+    Map<String, String> headers = {
+      'X-TenantID': await this.getTenantId(),
+      'Authorization': 'Bearer ' + await this.getAccessToken(),
+    };
+
+    var res = await http
+        .post(Uri.parse(urlApi), headers: headers, body: formData)
+        .then((data) => callback(data));
+
+    return res;
+  }
+
   void errorHandling(dynamic res, BuildContext context) {
     var err = jsonDecode(res.body)["error_description"];
     var msg = jsonDecode(res.body)["message"];
