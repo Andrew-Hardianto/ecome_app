@@ -1,5 +1,5 @@
 import 'dart:convert';
-// import 'dart:html';
+import 'dart:io';
 
 import 'package:ecome_app/controllers/main_service.dart';
 import 'package:ecome_app/views/screen/checkinout/checkinout_service.dart';
@@ -8,6 +8,8 @@ import 'package:ecome_app/views/screen/widget/text_appbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ecome_app/utils/extension.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
 
 class CheckinoutScreen extends StatefulWidget {
@@ -23,6 +25,9 @@ class _CheckinoutScreenState extends State<CheckinoutScreen> {
   final mainService = MainService();
   List<dynamic> purposeList = [];
   final TextEditingController _remarks = TextEditingController();
+
+  bool takePhoto = false;
+  File? image;
 
   int groupValue = 0;
   bool userLoc = false;
@@ -83,6 +88,128 @@ class _CheckinoutScreenState extends State<CheckinoutScreen> {
     checkinoutService.submitCheckinout(context, formData);
   }
 
+  showBottomSheet(BuildContext context) async {
+    await showModalBottomSheet(
+        backgroundColor: Colors.transparent,
+        isScrollControlled: true,
+        context: context,
+        builder: (context) {
+          return FractionallySizedBox(
+            heightFactor: 0.3,
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    height: 50,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        pickImage()
+                            .whenComplete(() => Navigator.of(context).pop());
+                      },
+                      child: Text(
+                        'Take a Picture',
+                        style: TextStyle(
+                          color: Colors.green,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.white,
+                        shape: new RoundedRectangleBorder(
+                          borderRadius: image == null
+                              ? new BorderRadius.circular(10.0)
+                              : new BorderRadius.only(
+                                  topRight: Radius.circular(10),
+                                  topLeft: Radius.circular(10),
+                                  bottomLeft: Radius.circular(0),
+                                  bottomRight: Radius.circular(0),
+                                ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  if (image != null)
+                    SizedBox(
+                      height: 50,
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            image = null;
+                          });
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'Delete Picture',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.white,
+                          shape: new RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.only(
+                              topRight: Radius.circular(0),
+                              topLeft: Radius.circular(0),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  SizedBox(
+                    height: 50,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.white,
+                        shape: new RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(10.0),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+// take photo
+  Future pickImage() async {
+    try {
+      final img = await ImagePicker().pickImage(source: ImageSource.camera);
+      if (img == null) return;
+      setState(() {
+        image = File(img.path);
+      });
+    } on PlatformException catch (e) {
+      print('Failed to pick image: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     dataType =
@@ -104,14 +231,14 @@ class _CheckinoutScreenState extends State<CheckinoutScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Container(
-              //   height: 200,
-              //   width: double.infinity,
-              //   decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(10.0),
-              //   ),
-              //   child: MapScreen(),
-              // ),
+              Container(
+                height: 200,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: MapScreen(),
+              ),
               Container(
                 padding:
                     const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
@@ -140,6 +267,74 @@ class _CheckinoutScreenState extends State<CheckinoutScreen> {
                       }
                     });
                   },
+                ),
+              ),
+              Card(
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Take a photo!'),
+                          Switch(
+                              value: takePhoto,
+                              onChanged: (v) {
+                                setState(() {
+                                  takePhoto = v;
+                                });
+                              })
+                        ],
+                      ),
+                      if (takePhoto)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 5,
+                            horizontal: 10,
+                          ),
+                          height: 100,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            color: Colors.grey.shade200,
+                            border: Border.all(
+                              color: Colors.grey,
+                              width: 2.0,
+                              style: BorderStyle.solid,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: InkWell(
+                            onTap: () {
+                              showBottomSheet(context);
+                            },
+                            child: image == null
+                                ? Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Icon(
+                                        Icons.camera_enhance,
+                                        size: 48,
+                                        color: Colors.grey,
+                                      ),
+                                      Text(
+                                        'Take Photo',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.grey,
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                : Image.file(image!),
+                          ),
+                        )
+                    ],
+                  ),
                 ),
               ),
               if (groupValue == 1)

@@ -5,8 +5,6 @@ import 'package:ecome_app/controllers/auth_controllers.dart';
 import 'package:ecome_app/utils/snackbar.dart';
 import 'package:ecome_app/views/screen/auth/login_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:image_picker/image_picker.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -27,10 +25,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Uint8List? _image;
 
   selectedImage() async {
-    Uint8List im = await AuthController().pickImage(ImageSource.gallery);
+    Uint8List img = await AuthController().pickImage(ImageSource.gallery);
 
     setState(() {
-      _image = im;
+      _image = img;
     });
   }
 

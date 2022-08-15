@@ -44,6 +44,7 @@ dependencies:
   trust_location: ^2.0.13
   location: ^4.2.0
   google_maps_flutter: ^2.1.10
+  carousel_slider: ^4.1.1
 
 dev_dependencies:
   flutter_test:

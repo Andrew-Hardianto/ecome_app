@@ -1,3 +1,4 @@
+import 'package:ecome_app/controllers/main_service.dart';
 import 'package:ecome_app/provider/map_provider.dart';
 import 'package:ecome_app/provider/products.dart';
 import 'package:ecome_app/provider/theme_provider.dart';
@@ -9,6 +10,7 @@ import 'package:ecome_app/views/screen/detail/detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:jwt_decode_full/jwt_decode_full.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,9 +39,9 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final mainService = MainService();
     final themeProvider = Provider.of<ThemeProvider>(context);
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
@@ -56,7 +58,10 @@ class MyApp extends StatelessWidget {
       theme: MyTheme.lightTheme,
       darkTheme: MyTheme.darkTheme,
       onGenerateRoute: ((settings) => generateRoute(settings)),
-      home: LoginScreen(),
+      home: mainService.getAccessToken() != null ||
+              mainService.tokenExpired() == false
+          ? BottomNavbar()
+          : LoginScreen(),
       // home: BottomNavbar(),
       routes: {
         DetailPage.id: (context) => DetailPage(),

@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ecome_app/views/screen/widget/category_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -11,11 +12,13 @@ class Category extends StatelessWidget {
     return Container(
       height: 180,
       width: double.infinity,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
+      child: CarouselSlider.builder(
+        options:
+            CarouselOptions(height: 200, autoPlay: true, viewportFraction: 1),
         itemCount: 5,
-        itemBuilder: (BuildContext context, int index) =>
-            CategoryItem(index: index),
+        itemBuilder: (context, int index, realIndex) {
+          return CategoryItem(index: index);
+        },
       ),
     );
   }

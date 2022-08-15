@@ -36,7 +36,7 @@ class CategoryItem extends StatelessWidget {
       children: [
         Container(
           margin: EdgeInsets.symmetric(
-            horizontal: 10,
+            horizontal: 5,
           ),
           width: 150,
           height: 150,

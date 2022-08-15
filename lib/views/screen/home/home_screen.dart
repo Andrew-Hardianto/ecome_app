@@ -30,6 +30,7 @@ class _HomeScreeenState extends State<HomeScreeen> {
   void initState() {
     super.initState();
     homeService.getProfile(context);
+    homeService.checkAppVersion(context);
   }
 
   @override

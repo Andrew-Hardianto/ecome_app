@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 // import 'dart:html';
 // import 'dart:html';
 
@@ -9,6 +10,8 @@ import 'package:ecome_app/provider/user_provider.dart';
 import 'package:ecome_app/views/screen/bottom_navbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class CheckInOutService {
@@ -32,7 +35,6 @@ class CheckInOutService {
         '/api/v1/lookup/globalkey?name=TM_CHECKINOUT_PURPOSES';
 
     final List<PurposeCheckInOut> purposeList = [];
-    // final purposeList = Provider.of<UserProvider>(context);
 
     await mainService.getUrl(url, (res) {
       if (res.statusCode == 200) {

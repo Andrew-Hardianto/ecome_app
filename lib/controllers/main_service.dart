@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 // import 'dart:html';
 import 'dart:math';
@@ -9,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:jwt_decode_full/jwt_decode_full.dart';
 import 'package:provider/provider.dart';
 
 class MainService {
@@ -86,12 +88,32 @@ class MainService {
     return color;
   }
 
-  getAuthoritiesToken() {}
+  getAuthoritiesToken() async {
+    final profile = await storage.read(key: 'AU@HZS!');
+    if (profile != null) {
+      final token = jsonDecode(profile)['authoritiesToken'];
+      // let authToken: any = jwt_decode(profile.authoritiesToken);
+      final authToken = jwtDecode(token);
+      return authToken.payload['authorities'];
+    } else {
+      return null;
+    }
+  }
 
   getAccessToken() async {
     final String? keyJson = await storage.read(key: 'SPS!#WU');
-    final url = jsonDecode(keyJson!)['accessToken'];
-    return url.toString();
+    if (keyJson != null) {
+      final url = jsonDecode(keyJson)['accessToken'];
+      return url;
+    } else {
+      return null;
+    }
+  }
+
+  Future<bool?> tokenExpired() async {
+    final token = await getAccessToken();
+    final decodeToken = jwtDecode(token);
+    return await decodeToken.isExpired;
   }
 
   getTenantId() async {
@@ -105,13 +127,18 @@ class MainService {
     Map<String, String> bodyData = {
       'X-TenantID': await this.getTenantId(),
       'Authorization': 'Bearer ' + await this.getAccessToken(),
-      "AuthorizationToken": await this.getAuthoritiesToken() ?? ''
     };
 
     var res = await http
         .get(Uri.parse(url), headers: bodyData)
+        .timeout(
+          Duration(milliseconds: 35000),
+          onTimeout: () => http.Response(
+            'message',
+            408,
+          ),
+        )
         .then((data) => callback(data));
-    // .catchError((err) => print(err));
 
     return res;
   }
@@ -124,15 +151,16 @@ class MainService {
 
     var res = await http
         .post(Uri.parse(urlApi), headers: headers, body: formData)
+        .timeout(Duration(milliseconds: 35000))
         .then((data) => callback(data));
 
     return res;
   }
 
   void errorHandling(dynamic res, BuildContext context) {
-    var err = jsonDecode(res.body)["error_description"];
-    var msg = jsonDecode(res.body)["message"];
     if (res.statusCode == 401 || res.statusCode == 400) {
+      var msg = jsonDecode(res.body)["message"];
+      var err = jsonDecode(res.body)["error_description"];
       if (msg != "") {
         print(msg);
         SnackBarError(context, msg);
