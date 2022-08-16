@@ -23,7 +23,7 @@ class MyTheme {
   static final darkTheme = ThemeData(
     scaffoldBackgroundColor: '#121212'.toColor(),
     primaryColor: '#121212'.toColor(),
-    colorScheme: ColorScheme.dark(),
+    colorScheme: ColorScheme.dark(primary: Colors.green),
     cardColor: '#121212'.toColor(),
     iconTheme: IconThemeData(color: Colors.white),
     shadowColor: Colors.white,
@@ -34,7 +34,7 @@ class MyTheme {
     shadowColor: Colors.black,
     scaffoldBackgroundColor: Colors.white,
     primaryColor: Colors.white,
-    colorScheme: ColorScheme.light(),
+    colorScheme: ColorScheme.light(primary: Colors.green),
     cardColor: Colors.white,
     iconTheme: IconThemeData(color: Colors.black),
     backgroundColor: Colors.white,
