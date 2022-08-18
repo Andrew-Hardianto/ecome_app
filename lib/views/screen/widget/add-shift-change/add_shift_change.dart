@@ -7,7 +7,10 @@ import 'package:intl/intl.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class AddShiftChange extends StatefulWidget {
-  const AddShiftChange({Key? key}) : super(key: key);
+  final String action;
+  final Map<String, dynamic>? data;
+  const AddShiftChange({Key? key, required this.action, this.data})
+      : super(key: key);
 
   @override
   State<AddShiftChange> createState() => _AddShiftChangeState();
@@ -21,6 +24,7 @@ class _AddShiftChangeState extends State<AddShiftChange> {
   DateTime shiftEndDate = DateTime.now();
 
   List<dynamic> optShift = [];
+
   String? selectedItem;
   String? selectedName;
 
@@ -28,6 +32,16 @@ class _AddShiftChangeState extends State<AddShiftChange> {
   void initState() {
     super.initState();
     getShift(context);
+    if (widget.action == 'edit') {
+      this.shiftStartDate = widget.data!['shiftStartDate'];
+      this.shiftEndDate = widget.data!['shiftEndDate'];
+      this.startDate.text =
+          DateFormat('dd MMM yyyy').format(widget.data!['shiftStartDate']);
+      this.endDate.text =
+          DateFormat('dd MMM yyyy').format(widget.data!['shiftEndDate']);
+      this.selectedItem = widget.data!['shiftId'];
+      this.selectedName = widget.data!['shiftName'];
+    }
   }
 
   selectedDate(String type) async {
@@ -234,7 +248,7 @@ class _AddShiftChangeState extends State<AddShiftChange> {
                     width: 130,
                     child: ElevatedButton(
                         onPressed: () {
-                          Navigator.of(context).pop(null);
+                          Navigator.of(context).pop();
                           // return null;
                         },
                         child: Text('CANCEL'),
@@ -246,7 +260,7 @@ class _AddShiftChangeState extends State<AddShiftChange> {
                     width: 130,
                     child: ElevatedButton(
                       onPressed: addShift,
-                      child: Text('ADD'),
+                      child: Text(widget.action == 'add' ? 'ADD' : 'EDIT'),
                     ),
                   ),
                 ],
