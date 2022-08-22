@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class CategoryItem extends StatelessWidget {
+class CategoryItem extends StatefulWidget {
   final int index;
+  final List<dynamic> data;
 
-  CategoryItem({Key? key, required this.index}) : super(key: key);
+  CategoryItem({Key? key, required this.index, required this.data})
+      : super(key: key);
 
+  @override
+  State<CategoryItem> createState() => _CategoryItemState();
+}
+
+class _CategoryItemState extends State<CategoryItem> {
   List<Map<String, Object>> categories = [
     {
       'categoryName': 'Phones',
@@ -30,6 +36,22 @@ class CategoryItem extends StatelessWidget {
     },
   ];
 
+  openNews(url) async {
+    if (url != null) {
+      var newsurl = Uri.parse(url);
+      if (await canLaunchUrl(newsurl)) {
+        await launch(
+          url,
+          forceWebView: true,
+          forceSafariVC: true,
+          enableJavaScript: true,
+        );
+        // await launchUrl(url,)
+      }
+    }
+    print(url);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -43,22 +65,13 @@ class CategoryItem extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
-              image: AssetImage('${categories[index]['categoryImage']}'),
+              image: NetworkImage('${widget.data[widget.index]['imagePath']}'),
             ),
           ),
-        ),
-        Positioned(
-          bottom: 0,
-          right: 10,
-          left: 10,
-          child: Container(
-            child: Text(
-              '${categories[index]['categoryName']}',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            ),
+          child: InkWell(
+            onTap: () {
+              openNews(widget.data[widget.index]['url']);
+            },
           ),
         ),
       ],

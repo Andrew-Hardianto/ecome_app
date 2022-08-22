@@ -48,6 +48,19 @@ dependencies:
   intl: ^0.17.0
   flutter_datetime_picker: ^1.5.1
   flutter_slidable: ^2.0.0
+  connectivity_plus: ^2.3.6+1
+  local_auth: ^2.1.2
+  # file_picker: ^5.0.1
+  url_launcher: ^6.1.5
+  image_cropper: ^3.0.0
+  flutter_image_compress: ^1.1.1
+  tutorial_coach_mark: ^1.2.4
+  tflite_flutter_helper: ^0.3.1
+  tflite_flutter: ^0.9.0
+  google_ml_kit: ^0.12.0
+  path_provider: ^2.0.11
+  flutter_local_notifications: ^9.8.0+1
+  rxdart: ^0.27.5
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +88,7 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
+    - mobilefacenet.tflite
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

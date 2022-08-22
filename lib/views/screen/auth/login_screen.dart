@@ -9,8 +9,12 @@ import 'package:ecome_app/views/screen/auth/sign_up.dart';
 import 'package:ecome_app/views/screen/bottom_navbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:jwt_decode_full/jwt_decode_full.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:local_auth_android/local_auth_android.dart';
+import 'package:local_auth_ios/local_auth_ios.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -21,6 +25,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   var mainService = MainService();
+  final LocalAuthentication auth = LocalAuthentication();
+  bool check = false;
 
   bool hidePassword = true;
   bool isLoading = false;
@@ -29,9 +35,41 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+    checkFingerPrint();
   }
 
-  submitLogin() async {
+  Future checkFingerPrint() async {
+    final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
+    final bool canAuthenticate =
+        canAuthenticateWithBiometrics || await auth.isDeviceSupported();
+    setState(() {
+      check = canAuthenticate;
+    });
+  }
+
+  openFinger() async {
+    if (check)
+      try {
+        final bool didAuthenticate = await auth.authenticate(
+            authMessages: [
+              AndroidAuthMessages(
+                signInTitle: 'Fingerprint Authentication',
+                cancelButton: 'Batal',
+              ),
+              IOSAuthMessages(cancelButton: 'Batal')
+            ],
+            localizedReason: 'Please authenticate to show account balance',
+            options: const AuthenticationOptions(
+              useErrorDialogs: false,
+              biometricOnly: true,
+            ));
+        print(didAuthenticate);
+      } on PlatformException catch (e) {
+        print(e);
+      }
+  }
+
+  Future submitLogin() async {
     setState(() {
       isLoading = true;
     });
@@ -45,8 +83,6 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       isLoading = false;
     });
-
-    print({'status', res.body});
 
     if (res.statusCode == 200) {
       final jwtData = jwtDecode(data['access_token']);
@@ -68,8 +104,6 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       return showSnackbarError(data['error_description'], context);
     }
-
-    isLoading = false;
   }
 
   // const LoginScreen({
@@ -126,16 +160,15 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(
               height: 20,
             ),
-            Container(
-              width: MediaQuery.of(context).size.width - 40,
-              height: 50,
-              decoration: BoxDecoration(color: buttonColor),
-              child: Center(
-                child: InkWell(
-                  onTap: () {
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 110,
+                child: ElevatedButton(
+                  onPressed: () {
                     submitLogin();
                     _passwordController.clear();
                   },
+                  style: ElevatedButton.styleFrom(primary: Colors.black),
                   child: isLoading
                       ? Center(
                           child: CircularProgressIndicator(
@@ -152,7 +185,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                 ),
               ),
-            ),
+              SizedBox(
+                width: 60,
+                child: ElevatedButton(
+                  onPressed: () {
+                    openFinger();
+                  },
+                  child: Icon(Icons.fingerprint_rounded),
+                  style: ElevatedButton.styleFrom(primary: Colors.amber),
+                ),
+              )
+            ]),
             SizedBox(
               height: 20,
             ),

@@ -274,40 +274,65 @@ class _ShiftChangeScreenState extends State<ShiftChangeScreen> {
               // SizedBox(
               //   height: MediaQuery.of(context).size.height - 380,
               // ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    child: Text('Submit'),
-                    onPressed: shiftList.length == 0 ||
-                            shiftList.isEmpty ||
-                            remark.text == ''
-                        ? null
-                        : () {
-                            submit();
-                          },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.pressed))
-                            return Theme.of(context)
-                                .colorScheme
-                                .primary
-                                .withOpacity(0.5);
-                          else if (states.contains(MaterialState.disabled))
-                            return Colors.green.shade100;
-                          return Colors.green; // Use the component's default.
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              // Container(
+              //   padding: const EdgeInsets.symmetric(horizontal: 10),
+              //   child: SizedBox(
+              //     width: double.infinity,
+              //     child: ElevatedButton(
+              //       child: Text('Submit'),
+              //       onPressed: shiftList.length == 0 ||
+              //               shiftList.isEmpty ||
+              //               remark.text == ''
+              //           ? null
+              //           : () {
+              //               submit();
+              //             },
+              //       style: ButtonStyle(
+              //         backgroundColor: MaterialStateProperty.resolveWith<Color>(
+              //           (Set<MaterialState> states) {
+              //             if (states.contains(MaterialState.pressed))
+              //               return Theme.of(context)
+              //                   .colorScheme
+              //                   .primary
+              //                   .withOpacity(0.5);
+              //             else if (states.contains(MaterialState.disabled))
+              //               return Colors.green.shade100;
+              //             return Colors.green; // Use the component's default.
+              //           },
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),
       ),
+      bottomSheet: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: ElevatedButton(
+          child: Text('Submit'),
+          onPressed:
+              shiftList.length == 0 || shiftList.isEmpty || remark.text == ''
+                  ? null
+                  : () {
+                      submit();
+                    },
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.resolveWith<Color>(
+              (Set<MaterialState> states) {
+                if (states.contains(MaterialState.pressed))
+                  return Theme.of(context).colorScheme.primary.withOpacity(0.5);
+                else if (states.contains(MaterialState.disabled))
+                  return Colors.green.shade100;
+                return Colors.green; // Use the component's default.
+              },
+            ),
+          ),
+        ),
+      ),
+      resizeToAvoidBottomInset: false,
     );
   }
 }

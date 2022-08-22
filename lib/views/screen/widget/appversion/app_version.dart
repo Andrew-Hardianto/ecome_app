@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/services.dart';
 
 class AppVersion extends StatefulWidget {
   const AppVersion({Key? key}) : super(key: key);
@@ -10,6 +9,13 @@ class AppVersion extends StatefulWidget {
 }
 
 class _AppVersionState extends State<AppVersion> {
+  Future copyToClipboard() async {
+    await Clipboard.setData(ClipboardData(text: 'App Version'));
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Copied to clipboard'),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -38,12 +44,17 @@ class _AppVersionState extends State<AppVersion> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text(
-                  'New Version Realeased!',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.green,
+                InkWell(
+                  onTap: () {
+                    copyToClipboard();
+                  },
+                  child: Text(
+                    'New Version Realeased!',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.green,
+                    ),
                   ),
                 ),
                 SizedBox(
