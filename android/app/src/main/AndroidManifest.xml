@@ -13,6 +13,7 @@
         </intent>
     </queries>
    <application
+        android:usesCleartextTraffic="true"
         android:label="ecome_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">

@@ -1,4 +1,5 @@
 import 'package:ecome_app/controllers/main_service.dart';
+import 'package:ecome_app/controllers/notification.dart';
 import 'package:ecome_app/provider/map_provider.dart';
 import 'package:ecome_app/provider/products.dart';
 import 'package:ecome_app/provider/theme_provider.dart';
@@ -7,12 +8,17 @@ import 'package:ecome_app/router.dart';
 import 'package:ecome_app/views/screen/auth/login_screen.dart';
 import 'package:ecome_app/views/screen/bottom_navbar.dart';
 import 'package:ecome_app/views/screen/detail/detail_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await requestPermission();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   runApp(
     MultiProvider(
@@ -33,6 +39,26 @@ void main() async {
       child: MyApp(),
     ),
   );
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print({'background': message.notification});
+}
+
+Future<void> requestPermission() async {
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+
+  print('User granted permission: ${settings.authorizationStatus}');
 }
 
 class MyApp extends StatefulWidget {

@@ -72,6 +72,7 @@ class _AppVersionState extends State<AppVersion> {
                   alignment: Alignment.bottomCenter,
                   child: ElevatedButton(
                     onPressed: () {
+                      // https://play.google.com/store/apps/details?id=com.git.sc
                       Navigator.of(context).pop();
                     },
                     child: Text(

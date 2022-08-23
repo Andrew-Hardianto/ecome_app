@@ -1,6 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:ecome_app/controllers/main_service.dart';
+import 'package:ecome_app/controllers/notification.dart';
 import 'package:ecome_app/provider/theme_provider.dart';
 import 'package:ecome_app/views/screen/home/home_service.dart';
 import 'package:ecome_app/views/screen/widget/Sidemenu/sidemenu.dart';
@@ -10,9 +14,11 @@ import 'package:ecome_app/views/screen/widget/category_list.dart';
 import 'package:ecome_app/views/screen/widget/custom_app_bar.dart';
 import 'package:ecome_app/views/screen/widget/searchbar.dart';
 import 'package:ecome_app/views/screen/widget/tag.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ecome_app/utils/extension.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 class HomeScreeen extends StatefulWidget {
   // const HomeScreeen({Key? key}) : super(key: key);
@@ -23,6 +29,10 @@ class HomeScreeen extends StatefulWidget {
 class _HomeScreeenState extends State<HomeScreeen> {
   var mainService = MainService();
   var homeService = HomeService();
+  static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+  final Connectivity _connectivity = Connectivity();
+  ConnectivityResult _connectionStatus = ConnectivityResult.none;
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
   var url;
 
@@ -31,6 +41,51 @@ class _HomeScreeenState extends State<HomeScreeen> {
     super.initState();
     homeService.getProfile(context);
     homeService.checkAppVersion(context);
+    FirebaseMessaging.instance
+        .getToken()
+        .then((value) => print({'token': value}));
+
+    // notif background on terminate onclick
+    FirebaseMessaging.instance.getInitialMessage().then((message) {
+      if (message != null) {
+        print({'initial msg': message.notification!.title});
+      }
+    });
+
+    //  on background click
+    FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      print(event.notification!.body);
+    });
+
+    // foreground notif
+    FirebaseMessaging.onMessage.listen((event) {
+      if (event.notification != null) {
+        print({'fg': event.notification!.title});
+      }
+    });
+
+    getDeviceInfo();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+  }
+
+  getDeviceInfo() async {
+    final device = await deviceInfoPlugin.androidInfo;
+    print(device.device);
+    print(Platform.isAndroid);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    setState(() {
+      _connectionStatus = result;
+      print(result);
+    });
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
   }
 
   @override

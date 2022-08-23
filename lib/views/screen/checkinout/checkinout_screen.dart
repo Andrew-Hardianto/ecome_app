@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:ecome_app/controllers/main_service.dart';
+import 'package:ecome_app/controllers/notification.dart';
 import 'package:ecome_app/views/screen/checkinout/checkinout_service.dart';
 import 'package:ecome_app/views/screen/widget/map/google_map_screen.dart';
 import 'package:ecome_app/views/screen/widget/text_appbar.dart';
@@ -44,6 +45,7 @@ class _CheckinoutScreenState extends State<CheckinoutScreen> {
     super.initState();
     checkinoutService.getLocation(context);
     getPurpose(context);
+    NotificationApi.init();
   }
 
   getPurpose(BuildContext context) async {

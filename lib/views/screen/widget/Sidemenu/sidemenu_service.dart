@@ -1,6 +1,5 @@
 import 'package:ecome_app/models/menulist.dart';
 import 'package:ecome_app/views/screen/checkinout/checkinout_screen.dart';
-import 'package:ecome_app/views/screen/face-detection/face_detection_screen.dart';
 import 'package:ecome_app/views/screen/notification/notification_screen.dart';
 import 'package:ecome_app/views/screen/shiftchange/shift_change_screen.dart';
 import 'package:flutter/material.dart';
@@ -27,11 +26,6 @@ class SidemenuService {
       name: 'Shift Change',
       url: ShiftChangeScreen.routeName,
     ),
-    // MenuList(
-    //   menuIcon: Icon(Icons.face_outlined),
-    //   name: 'Face Detection',
-    //   url: FaceDetectionScreen.routeName,
-    // ),
     MenuList(
       menuIcon: Icon(Icons.notification_important_outlined),
       name: 'Notification',
