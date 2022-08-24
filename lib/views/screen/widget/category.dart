@@ -43,17 +43,19 @@ class _CategoryState extends State<Category> {
     return Container(
       height: 180,
       width: double.infinity,
-      child: CarouselSlider.builder(
-        options:
-            CarouselOptions(height: 200, autoPlay: true, viewportFraction: 1),
-        itemCount: news.length,
-        itemBuilder: (context, int index, realIndex) {
-          return CategoryItem(
-            index: index,
-            data: news,
-          );
-        },
-      ),
+      child: news.length > 0
+          ? CarouselSlider.builder(
+              options: CarouselOptions(
+                  height: 200, autoPlay: true, viewportFraction: 1),
+              itemCount: news.length,
+              itemBuilder: (context, int index, realIndex) {
+                return CategoryItem(
+                  index: index,
+                  data: news,
+                );
+              },
+            )
+          : Container(),
     );
   }
 }

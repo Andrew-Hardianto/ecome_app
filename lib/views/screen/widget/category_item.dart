@@ -5,8 +5,11 @@ class CategoryItem extends StatefulWidget {
   final int index;
   final List<dynamic> data;
 
-  CategoryItem({Key? key, required this.index, required this.data})
-      : super(key: key);
+  CategoryItem({
+    Key? key,
+    required this.index,
+    required this.data,
+  }) : super(key: key);
 
   @override
   State<CategoryItem> createState() => _CategoryItemState();

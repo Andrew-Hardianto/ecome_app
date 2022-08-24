@@ -24,7 +24,7 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case NotifScreen.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => const NotifScreen(),
+        builder: (_) => const NotifShowcase(),
       );
     default:
       return MaterialPageRoute(
