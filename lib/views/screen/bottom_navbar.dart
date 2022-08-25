@@ -1,4 +1,5 @@
 import 'package:ecome_app/const.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +11,17 @@ class BottomNavbar extends StatefulWidget {
 class _BottomNavbarState extends State<BottomNavbar> {
   // const BottomNavbar({Key? key}) : super(key: key);
   int pageIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // foreground notif
+    FirebaseMessaging.onMessage.listen((event) {
+      if (event.notification != null) {
+        print({'fg': event.notification!.title});
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

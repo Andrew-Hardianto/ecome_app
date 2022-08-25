@@ -11,6 +11,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -18,6 +19,12 @@ void main() async {
   await Firebase.initializeApp();
   await requestPermission();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  // Plugin must be initialized before using
+  await FlutterDownloader.initialize(
+    debug: true,
+    ignoreSsl: true,
+  );
 
   runApp(
     MultiProvider(
@@ -58,6 +65,9 @@ Future<void> requestPermission() async {
   );
 
   print('User granted permission: ${settings.authorizationStatus}');
+  FirebaseMessaging.instance
+      .getToken()
+      .then((value) => print({'token': value}));
 }
 
 class MyApp extends StatefulWidget {

@@ -1,5 +1,6 @@
 import 'package:ecome_app/views/screen/calendar/calendar_screen.dart';
 import 'package:ecome_app/views/screen/camera/camera_screen.dart';
+import 'package:ecome_app/views/screen/chart/chart_screen.dart';
 import 'package:ecome_app/views/screen/checkinout/checkinout_screen.dart';
 import 'package:ecome_app/views/screen/notification/notification_screen.dart';
 import 'package:ecome_app/views/screen/shiftchange/shift_change_screen.dart';
@@ -32,6 +33,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const CameraScreen(),
+      );
+    case ChartScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const ChartScreen(),
       );
     case NotifScreen.routeName:
       return MaterialPageRoute(

@@ -63,6 +63,9 @@ dependencies:
   device_info_plus: ^4.1.2
   table_calendar: ^3.0.6
   flutter_downloader: ^1.8.3
+  permission_handler: ^10.0.0
+  shimmer: ^2.0.0
+  fl_chart: ^0.55.1
 
 dev_dependencies:
   flutter_test:

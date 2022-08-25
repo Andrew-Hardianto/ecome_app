@@ -154,3 +154,11 @@ class PurposeCheckInOut {
   factory PurposeCheckInOut.fromJson(String source) =>
       PurposeCheckInOut.fromMap(jsonDecode(source));
 }
+
+class Data {
+  final String name;
+  final double percent;
+  final Color color;
+
+  Data({required this.name, required this.percent, required this.color});
+}

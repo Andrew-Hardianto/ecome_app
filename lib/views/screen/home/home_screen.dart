@@ -41,9 +41,6 @@ class _HomeScreeenState extends State<HomeScreeen> {
     super.initState();
     homeService.getProfile(context);
     homeService.checkAppVersion(context);
-    FirebaseMessaging.instance
-        .getToken()
-        .then((value) => print({'token': value}));
 
     // notif background on terminate onclick
     FirebaseMessaging.instance.getInitialMessage().then((message) {
@@ -55,13 +52,6 @@ class _HomeScreeenState extends State<HomeScreeen> {
     //  on background click
     FirebaseMessaging.onMessageOpenedApp.listen((event) {
       print(event.notification!.body);
-    });
-
-    // foreground notif
-    FirebaseMessaging.onMessage.listen((event) {
-      if (event.notification != null) {
-        print({'fg': event.notification!.title});
-      }
     });
 
     getDeviceInfo();
