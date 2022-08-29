@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:ecome_app/controllers/main_service.dart';
-import 'package:ecome_app/controllers/notification.dart';
 import 'package:ecome_app/provider/theme_provider.dart';
 import 'package:ecome_app/views/screen/home/home_service.dart';
 import 'package:ecome_app/views/screen/widget/Sidemenu/sidemenu.dart';

@@ -78,14 +78,28 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  bool isExpired = false;
+
   @override
   initState() {
     super.initState();
+    getToken();
   }
 
   @override
   dispose() {
     super.dispose();
+  }
+
+  getToken() {
+    MainService().tokenExpired().then(
+      (value) {
+        setState(() {
+          isExpired = value!;
+          print({'expired': isExpired});
+        });
+      },
+    );
   }
 
   @override
@@ -107,8 +121,7 @@ class _MyAppState extends State<MyApp> {
       theme: MyTheme.lightTheme,
       darkTheme: MyTheme.darkTheme,
       onGenerateRoute: ((settings) => generateRoute(settings)),
-      home: mainService.getAccessToken() != null ||
-              mainService.tokenExpired() == false
+      home: mainService.getAccessToken() != null || !isExpired
           ? BottomNavbar()
           : LoginScreen(),
       // home: BottomNavbar(),

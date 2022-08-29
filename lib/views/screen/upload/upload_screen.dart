@@ -60,10 +60,10 @@ class _UploadScreenState extends State<UploadScreen> {
   }
 
   getRegulation() async {
-    var url = await mainService.urlApi() + '/api/v1/user/regulations';
     setState(() {
       isLoading = true;
     });
+    var url = await mainService.urlApi() + '/api/v1/user/regulations';
 
     await mainService.getUrl(url, (res) {
       if (res.statusCode == 200) {

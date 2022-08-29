@@ -31,7 +31,6 @@ class _CategoryState extends State<Category> {
         setState(() {
           Map<String, dynamic> resData = jsonDecode(res.body);
           news = resData['content'];
-          print(news);
         });
       } else {
         mainService.errorHandling(res, context);
