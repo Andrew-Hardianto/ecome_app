@@ -27,15 +27,6 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    aaptOptions {
-        noCompress 'tflite'
-        noCompress 'lite'
-    }
-
-    lintOptions {
-        disable 'InvalidPackage'
-    }
-
     compileSdkVersion 33
     ndkVersion flutter.ndkVersion
 
@@ -80,13 +71,10 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation platform('com.google.firebase:firebase-bom:30.3.2')
-    implementation 'org.tensorflow:tensorflow-lite:2.3.0'
-    implementation 'org.tensorflow:tensorflow-lite-gpu:2.3.0'
-    implementation 'com.android.support:multidex:1.0.3'
 }
 
-// android {
-//     lintOptions {
-//         abortOnError false
-//     }
-// }
+android {
+    lintOptions {
+        abortOnError false
+    }
+}

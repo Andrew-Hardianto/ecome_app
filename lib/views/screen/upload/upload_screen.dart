@@ -3,6 +3,7 @@ import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:ecome_app/controllers/main_service.dart';
+import 'package:ecome_app/views/screen/widget/empty-data/empty_data.dart';
 import 'package:flutter/material.dart';
 import 'package:ecome_app/utils/extension.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
@@ -106,49 +107,51 @@ class _UploadScreenState extends State<UploadScreen> {
         child: Stack(
           children: [
             if (!isLoading)
-              ListView(
-                  children: regulationList.map((e) {
-                return Container(
-                  height: 60.0,
-                  child: Card(
-                    elevation: 5,
-                    color: dark ? '#121212'.toColor() : Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6.0),
-                    ),
-                    shadowColor: dark ? Colors.white : Colors.black,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 10.0,
-                        horizontal: 20.0,
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(Icons.file_open),
-                          SizedBox(
-                            width: 10,
+              regulationList.length > 0
+                  ? ListView(
+                      children: regulationList.map((e) {
+                      return Container(
+                        height: 60.0,
+                        child: Card(
+                          elevation: 5,
+                          color: dark ? '#121212'.toColor() : Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6.0),
                           ),
-                          Expanded(
-                            child: Text(
-                              e['name'],
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700,
-                              ),
+                          shadowColor: dark ? Colors.white : Colors.black,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 10.0,
+                              horizontal: 20.0,
+                            ),
+                            child: Row(
+                              children: <Widget>[
+                                Icon(Icons.file_open),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    e['name'],
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.file_download),
+                                  onPressed: () {
+                                    downloadFile(e['path']);
+                                  },
+                                )
+                              ],
                             ),
                           ),
-                          IconButton(
-                            icon: Icon(Icons.file_download),
-                            onPressed: () {
-                              downloadFile(e['path']);
-                            },
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              }).toList()),
+                        ),
+                      );
+                    }).toList())
+                  : EmptyData(text: 'Data not found!'),
             if (isLoading)
               ListView(
                 children: [
