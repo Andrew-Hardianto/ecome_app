@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:device_uuid/device_uuid.dart';
 import 'package:ecome_app/controllers/main_service.dart';
 import 'package:ecome_app/provider/theme_provider.dart';
 import 'package:ecome_app/views/screen/home/home_service.dart';
@@ -28,6 +29,7 @@ class HomeScreeen extends StatefulWidget {
 class _HomeScreeenState extends State<HomeScreeen> {
   var mainService = MainService();
   var homeService = HomeService();
+  final _deviceUuidPlugin = DeviceUuid();
   static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
   final Connectivity _connectivity = Connectivity();
   ConnectivityResult _connectionStatus = ConnectivityResult.none;
@@ -60,7 +62,8 @@ class _HomeScreeenState extends State<HomeScreeen> {
 
   getDeviceInfo() async {
     final device = await deviceInfoPlugin.androidInfo;
-    print(device.device);
+
+    print(await _deviceUuidPlugin.getUUID());
     print(Platform.isAndroid);
   }
 

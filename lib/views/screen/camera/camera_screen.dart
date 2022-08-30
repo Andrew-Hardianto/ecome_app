@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 
+import 'package:ecome_app/controllers/main_service.dart';
 import 'package:ecome_app/views/screen/camera/camera_option.dart';
 import 'package:ecome_app/views/screen/widget/text_appbar.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ecome_app/views/screen/widget/common_buttons.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:http/http.dart' as http;
 
 class CameraScreen extends StatefulWidget {
   static const String routeName = '/camera';
@@ -32,11 +35,14 @@ class _CameraScreenState extends State<CameraScreen> {
       File? img = File(image.path);
 
       img = await _cropImage(imageFile: img);
-
+      var images = Image.memory(await image.readAsBytes());
+      // var images = File.fromRawPath(await image.readAsBytes());
+      print(images);
       setState(() {
         _image = img;
         Navigator.of(context).pop();
       });
+      postImage(image);
     } on PlatformException catch (e) {
       print(e);
       Navigator.of(context).pop();
@@ -62,6 +68,35 @@ class _CameraScreenState extends State<CameraScreen> {
         quality: quality);
 
     return File(result!.path);
+  }
+
+  Future getImage() async {
+    var url = await MainService().urlApi() + '/api/v1/user/profile/picture';
+
+    MainService().getUrl(url, (res) {
+      print(res.statusCode);
+    });
+  }
+
+  postImage(formData) async {
+    var url = await MainService().urlApi() + '/api/v1/user/profile/picture';
+
+    // var form = {'profilePicture': jsonEncode(formData.toString())};
+
+    var req = http.MultipartRequest('POST', Uri.parse(url));
+    var length = formData;
+    var stream = http.ByteStream(formData);
+
+    var form = http.MultipartFile('profilePicture', stream, length,
+        filename: formData.path);
+
+    req.files.add(form);
+
+    // print();
+
+    // MainService().postFormDataUrlApi(url, form, (res) {
+    //   print(res.statusCode);
+    // });
   }
 
   void _showSelectPhotoOptions(BuildContext context) {

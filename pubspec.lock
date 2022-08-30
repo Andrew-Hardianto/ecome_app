@@ -190,6 +190,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
+  device_uuid:
+    dependency: "direct main"
+    description:
+      name: device_uuid
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.4"
   encrypt:
     dependency: "direct main"
     description:

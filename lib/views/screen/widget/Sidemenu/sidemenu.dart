@@ -18,7 +18,7 @@ class SidemenuNavigation extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            height: 200,
+            height: MediaQuery.of(context).size.height / 4,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [Colors.green, Colors.green.shade200],
@@ -89,7 +89,7 @@ class SidemenuNavigation extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 SizedBox(
-                  height: MediaQuery.of(context).size.height - 300,
+                  height: MediaQuery.of(context).size.height / 1.7,
                   child: ListView(
                     children: sidemenuService.menuList.map((e) {
                       return ListTile(
