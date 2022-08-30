@@ -59,8 +59,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   getTimeShett(String start, String end) async {
-    var url = await mainService.urlApi() +
-        '/api/v1/user/tm/timesheet?start=' +
+    // var url = await mainService.urlApi() +
+    //     '/api/v1/user/tm/timesheet?start=' +
+    //     start +
+    //     '&end=' +
+    //     end;
+    var url = 'https://ng-api-dev.gitsolutions.id/api/user/time-sheet?start=' +
         start +
         '&end=' +
         end;
@@ -88,7 +92,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   handleCalendar(data, String? day) {
-    // print(data);
     var arrDateNoCheckInOut = [];
     var arrNoCheckInout = data
         .where((res) => !res['isDayOff'] && res['holiday'] == null)
@@ -99,15 +102,34 @@ class _CalendarScreenState extends State<CalendarScreen> {
     }
 
     var arrAlpha = [];
-    var alpha = data.where((res) => !res['isAlpha'] == true).toList();
+    var alpha = data
+        .where((res) => res['isAlpha'] != null && !res['isAlpha'] == true)
+        .toList();
     for (var i = 0; i < alpha.length; i++) {
       arrAlpha
           .add(DateFormat('d').format(DateTime.parse(alpha[i]['startDate'])));
     }
 
+    var arrDateOnTime = [];
+    var onTimeDay = data
+        .where((res) =>
+            res['isDayOff'] == false &&
+            res['isLateIn'] == false &&
+            res['holiday'] == null &&
+            res['actualInTime'] != null &&
+            res['actualOutTime'] != null)
+        .toList();
+    for (var i = 0; i < onTimeDay.length; i++) {
+      arrDateOnTime.add(
+          DateFormat('d').format(DateTime.parse(onTimeDay[i]['startDate'])));
+    }
+
+    print(arrDateOnTime.length);
+
     setState(() {
       datesAlpha = arrAlpha;
       datesNoCheckInOut = arrDateNoCheckInOut;
+      datesOnTime = arrDateOnTime;
     });
   }
 
@@ -137,16 +159,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
             },
             calendarBuilders: CalendarBuilders(
               defaultBuilder: (context, day, focusedDay) {
-                var da = day.day;
                 var das = DateFormat('EEEE').format(day);
                 Color warna;
 
                 if (das == 'Saturday' || das == 'Sunday') {
                   warna = Colors.grey.shade400;
-                } else if (datesNoCheckInOut.contains(day.day.toString())) {
-                  warna = '#CB84ED'.toColor();
+                } else if (datesOnTime.contains(day.day.toString())) {
+                  warna = '#3DC0F0'.toColor();
                 } else if (datesAlpha.contains(day.day.toString())) {
                   warna = '#FF7A00'.toColor();
+                } else if (datesNoCheckInOut.contains(day.day.toString())) {
+                  warna = '#CB84ED'.toColor();
                 } else {
                   warna = Colors.green;
                 }

@@ -1,4 +1,6 @@
+import 'package:ecome_app/controllers/main_service.dart';
 import 'package:ecome_app/models/menulist.dart';
+import 'package:ecome_app/views/screen/auth/login_screen.dart';
 import 'package:ecome_app/views/screen/calendar/calendar_screen.dart';
 import 'package:ecome_app/views/screen/camera/camera_screen.dart';
 import 'package:ecome_app/views/screen/chart/chart_screen.dart';
@@ -8,6 +10,8 @@ import 'package:ecome_app/views/screen/shiftchange/shift_change_screen.dart';
 import 'package:flutter/material.dart';
 
 class SidemenuService {
+  final mainService = MainService();
+
   final List<MenuList> menuList = [
     MenuList(
       menuIcon: Icon(Icons.bar_chart),
@@ -45,4 +49,15 @@ class SidemenuService {
       url: ChartScreen.routeName,
     ),
   ];
+
+  logout(BuildContext context) {
+    mainService.deleteStorage('SPS!#WU');
+    mainService.deleteStorage('AU@HZS!');
+    mainService.deleteStorage('G!T@VTR');
+    mainService.deleteStorage('ACT@KN2');
+    mainService.deleteStorage('P@CKGN!');
+    Future.delayed(Duration(milliseconds: 1000)).then((value) =>
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (BuildContext context) => LoginScreen())));
+  }
 }

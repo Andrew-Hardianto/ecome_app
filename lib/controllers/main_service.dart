@@ -76,6 +76,10 @@ class MainService {
     await storage.write(key: key, value: value);
   }
 
+  deleteStorage(String key) async {
+    await storage.delete(key: key);
+  }
+
   getRandomColor() async {
     final allValues = await storage.read(key: 'G!T@FTR');
     final decr = decrypt(allValues);

@@ -121,7 +121,9 @@ class SidemenuNavigation extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 child: Text('Logout'),
-                onPressed: () {},
+                onPressed: () {
+                  sidemenuService.logout(context);
+                },
                 style: ElevatedButton.styleFrom(primary: Colors.red),
               ),
             ),
