@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:dio/dio.dart';
 import 'package:ecome_app/controllers/main_service.dart';
 import 'package:ecome_app/views/screen/camera/camera_option.dart';
+import 'package:ecome_app/views/screen/widget/snackbar_error.dart';
 import 'package:ecome_app/views/screen/widget/text_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,7 +15,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ecome_app/views/screen/widget/common_buttons.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 class CameraScreen extends StatefulWidget {
   static const String routeName = '/camera';
@@ -24,7 +26,15 @@ class CameraScreen extends StatefulWidget {
 }
 
 class _CameraScreenState extends State<CameraScreen> {
+  final mainService = MainService();
   File? _image;
+  String? photo;
+
+  @override
+  void initState() {
+    super.initState();
+    getImage(context);
+  }
 
   Future _pickImage(ImageSource source) async {
     try {
@@ -35,14 +45,13 @@ class _CameraScreenState extends State<CameraScreen> {
       File? img = File(image.path);
 
       img = await _cropImage(imageFile: img);
-      var images = Image.memory(await image.readAsBytes());
       // var images = File.fromRawPath(await image.readAsBytes());
-      print(images);
+      // print(images);
       setState(() {
         _image = img;
         Navigator.of(context).pop();
       });
-      postImage(image);
+      postImage(_image);
     } on PlatformException catch (e) {
       print(e);
       Navigator.of(context).pop();
@@ -70,33 +79,50 @@ class _CameraScreenState extends State<CameraScreen> {
     return File(result!.path);
   }
 
-  Future getImage() async {
-    var url = await MainService().urlApi() + '/api/v1/user/profile/picture';
+  Future getImage(BuildContext context) async {
+    // var url = await mainService.urlApi() + '/api/v1/user/profile/picture';
+    var url = 'https://ng-api-dev.gitsolutions.id/api/user/profile/picture';
 
-    MainService().getUrl(url, (res) {
-      print(res.statusCode);
+    mainService.getUrl(url, (res) {
+      if (res.statusCode == 200) {
+        var data = jsonDecode(res.body);
+        print(jsonDecode(res.body)['profilePicture']);
+        setState(() {
+          photo = data['profilePicture'];
+        });
+      } else {
+        mainService.errorHandling(res, context);
+      }
     });
   }
 
   postImage(formData) async {
-    var url = await MainService().urlApi() + '/api/v1/user/profile/picture';
+    // var url = await mainService.urlApi() + '/api/v1/user/profile/picture';
+    var url = 'https://ng-api-dev.gitsolutions.id/api/user/profile/picture';
 
-    // var form = {'profilePicture': jsonEncode(formData.toString())};
+    var fileName = formData.path.split('/').last;
 
-    var req = http.MultipartRequest('POST', Uri.parse(url));
-    var length = formData;
-    var stream = http.ByteStream(formData);
+    var ext = fileName.split('.').last;
 
-    var form = http.MultipartFile('profilePicture', stream, length,
-        filename: formData.path);
+    var form = {
+      'profilePicture':
+          await MultipartFile.fromBytes(await formData.readAsBytes(),
+              filename: fileName,
+              contentType: MediaType(
+                'image',
+                ext,
+              ))
+    };
 
-    req.files.add(form);
-
-    // print();
-
-    // MainService().postFormDataUrlApi(url, form, (res) {
-    //   print(res.statusCode);
-    // });
+    mainService.postFormDataUrlApi(url, form, (res) {
+      if (res.statusCode == 200) {
+        var msg = res.data['message'];
+        SnackBarSuccess(context, msg);
+        getImage(context);
+      } else {
+        mainService.errorHandlingDio(res, context);
+      }
+    });
   }
 
   void _showSelectPhotoOptions(BuildContext context) {
@@ -197,13 +223,15 @@ class _CameraScreenState extends State<CameraScreen> {
                           color: Colors.grey.shade200,
                         ),
                         child: Center(
-                          child: _image == null
+                          child: _image == null && photo == null
                               ? Text(
                                   'No image selected',
                                   style: TextStyle(fontSize: 20),
                                 )
                               : CircleAvatar(
-                                  backgroundImage: FileImage(_image!),
+                                  backgroundImage: photo != null
+                                      ? NetworkImage(photo!) as ImageProvider
+                                      : FileImage(_image!),
                                   radius: 200.0,
                                 ),
                         ),

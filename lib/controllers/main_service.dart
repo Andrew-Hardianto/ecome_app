@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 // import 'dart:html';
 import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:ecome_app/provider/theme_provider.dart';
 import 'package:ecome_app/views/screen/widget/snackbar_error.dart';
 import 'package:encrypt/encrypt.dart' as encrypts;
@@ -15,6 +17,7 @@ import 'package:provider/provider.dart';
 
 class MainService {
   static var client = http.Client();
+  var dio = Dio();
 
   // Header
   Map<String, String> requestHeaders = {'Content-Type': 'application/json'};
@@ -162,18 +165,28 @@ class MainService {
     return res;
   }
 
-  postFormDataUrlApi(String urlApi, formData, Function callback) async {
+  postFormDataUrlApi(String urlApi, data, Function callback) async {
     Map<String, String> headers = {
       'X-TenantID': await this.getTenantId(),
       'Authorization': 'Bearer ' + await this.getAccessToken(),
     };
 
-    var res = await http
-        .post(Uri.parse(urlApi), headers: headers, body: formData)
-        .timeout(Duration(milliseconds: 35000))
-        .then((data) => callback(data));
+    try {
+      var formData = FormData.fromMap(data);
 
-    return res;
+      var res = await dio.post(urlApi,
+          data: formData,
+          options: Options(headers: headers, sendTimeout: 35000));
+
+      // var res = await http
+      //     .post(Uri.parse(urlApi), headers: headers, body: formData)
+      //     .timeout(Duration(milliseconds: 35000))
+      //     .then((data) => callback(data));
+
+      return callback(res);
+    } on DioError catch (e) {
+      callback(e);
+    }
   }
 
   void errorHandling(dynamic res, BuildContext context) {
@@ -188,6 +201,16 @@ class MainService {
         }
       }
       SnackBarError(context, "Can\'t connect to server. Please Contact Admin!");
+    } else {
+      SnackBarError(context, "Can\'t connect to server. Please Contact Admin!");
+    }
+  }
+
+  void errorHandlingDio(dynamic res, BuildContext context) {
+    if (res.response.statusCode == 401 || res.response.statusCode == 400) {
+      var msg = jsonDecode(res.response);
+      SnackBarError(context, msg);
+      // SnackBarError(context, "Can\'t connect to server. Please Contact Admin!");
     } else {
       SnackBarError(context, "Can\'t connect to server. Please Contact Admin!");
     }

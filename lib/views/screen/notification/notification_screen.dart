@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:ecome_app/controllers/notification.dart';
 import 'package:ecome_app/views/screen/bottom_navbar.dart';
 import 'package:ecome_app/views/screen/widget/text_appbar.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -32,6 +35,8 @@ class _NotifScreenState extends State<NotifScreen> {
   final _key2 = GlobalKey();
   final _key3 = GlobalKey();
 
+  File? file;
+
   @override
   void initState() {
     super.initState();
@@ -59,6 +64,18 @@ class _NotifScreenState extends State<NotifScreen> {
     Clipboard.getData(Clipboard.kTextPlain).then((value) {
       print(value!.text); //value is clipbarod data
     });
+  }
+
+  upload() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    print(result);
+    if (result != null) {
+      setState(() {
+        file = File(result.files.single.path!);
+        print(file?.readAsBytesSync());
+      });
+    }
   }
 
   @override
@@ -136,7 +153,29 @@ class _NotifScreenState extends State<NotifScreen> {
                   pasteText();
                 },
               ),
-            )
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width / 3,
+              height: 50,
+              child: file != null
+                  ? Icon(
+                      Icons.article,
+                      size: 40,
+                    )
+                  : Icon(
+                      Icons.article_outlined,
+                      size: 40,
+                    ),
+            ),
+            SizedBox(
+              width: 150,
+              child: ElevatedButton(
+                child: Text('Upload'),
+                onPressed: () {
+                  upload();
+                },
+              ),
+            ),
           ],
         ),
       ),
