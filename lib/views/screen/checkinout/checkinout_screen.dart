@@ -40,6 +40,8 @@ class _CheckinoutScreenState extends State<CheckinoutScreen> {
   String? selectedItem;
   var dataType;
 
+  bool isButtonActive = false;
+
   @override
   void initState() {
     super.initState();
@@ -120,7 +122,7 @@ class _CheckinoutScreenState extends State<CheckinoutScreen> {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.white,
+                        backgroundColor: Colors.white,
                         shape: new RoundedRectangleBorder(
                           borderRadius: image == null
                               ? new BorderRadius.circular(10.0)
@@ -154,7 +156,7 @@ class _CheckinoutScreenState extends State<CheckinoutScreen> {
                           ),
                         ),
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.white,
+                          backgroundColor: Colors.white,
                           shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.only(
                               topRight: Radius.circular(0),
@@ -185,7 +187,7 @@ class _CheckinoutScreenState extends State<CheckinoutScreen> {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.white,
+                        backgroundColor: Colors.white,
                         shape: new RoundedRectangleBorder(
                           borderRadius: new BorderRadius.circular(10.0),
                         ),
@@ -437,21 +439,34 @@ class _CheckinoutScreenState extends State<CheckinoutScreen> {
                   ),
                 ),
               Container(
+                height: 40,
                 margin: const EdgeInsets.only(top: 5),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: ['#52f03d'.toColor(), '#7ff03d'.toColor()],
-                  ),
+                      colors: ['#52f03d'.toColor(), '#7ff03d'.toColor()],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      stops: [0.5, 0.8]),
                   borderRadius: new BorderRadius.circular(8.0),
                 ),
                 child: ElevatedButton(
-                  child: Text('SUBMIT'),
-                  onPressed: () {
-                    submitData(context);
-                  },
+                  child: Text(
+                    'Submit',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  onPressed: isButtonActive
+                      ? () {
+                          submitData(context);
+                        }
+                      : null,
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.transparent,
-                    shadowColor: Colors.transparent,
+                    disabledBackgroundColor: Colors.green.shade200,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    // backgroundColor: Colors.transparent,
+                    // shadowColor: Colors.transparent,
                     shape: new RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(8.0),
                     ),

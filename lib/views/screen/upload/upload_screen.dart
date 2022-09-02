@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:isolate';
 import 'dart:ui';
 
+import 'package:dio/dio.dart';
 import 'package:ecome_app/controllers/main_service.dart';
 import 'package:ecome_app/views/screen/widget/empty-data/empty_data.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UploadScreen extends StatefulWidget {
   const UploadScreen({Key? key}) : super(key: key);
@@ -22,6 +25,9 @@ class UploadScreen extends StatefulWidget {
 class _UploadScreenState extends State<UploadScreen> {
   final mainService = MainService();
   ReceivePort _port = ReceivePort();
+  var dio = Dio();
+  Directory? directory;
+  dynamic progress;
 
   List<dynamic> regulationList = [];
 
@@ -81,17 +87,16 @@ class _UploadScreenState extends State<UploadScreen> {
     });
   }
 
-  downloadFile(url) async {
+  downloadFile(url, name) async {
     final status = await Permission.storage.request();
-    final folderDir = await getExternalStorageDirectory();
+    directory = await getExternalStorageDirectory();
 
     if (status.isGranted) {
       final id = await FlutterDownloader.enqueue(
         url: url,
-        savedDir: folderDir!.path,
+        savedDir: directory!.path,
         showNotification: true,
-        fileName: 'dowload',
-        // openFileFromNotification: true,
+        // fileName: 'download',
       );
 
       print(id);
@@ -142,7 +147,7 @@ class _UploadScreenState extends State<UploadScreen> {
                                 IconButton(
                                   icon: Icon(Icons.file_download),
                                   onPressed: () {
-                                    downloadFile(e['path']);
+                                    downloadFile(e['path'], e['name']);
                                   },
                                 )
                               ],

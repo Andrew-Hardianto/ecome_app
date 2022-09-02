@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:ecome_app/models/map.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -48,6 +50,17 @@ class _MapScreenState extends State<MapScreen> {
     } catch (err) {
       print('PlatformException $err');
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _mapCtrl.dispose();
   }
 
   @override

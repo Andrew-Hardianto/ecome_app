@@ -59,15 +59,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   getTimeShett(String start, String end) async {
-    // var url = await mainService.urlApi() +
-    //     '/api/v1/user/tm/timesheet?start=' +
-    //     start +
-    //     '&end=' +
-    //     end;
-    var url = 'https://ng-api-dev.gitsolutions.id/api/user/time-sheet?start=' +
+    var url = await mainService.urlApi() +
+        '/api/v1/user/tm/timesheet?start=' +
         start +
         '&end=' +
         end;
+    // var url = 'https://ng-api-dev.gitsolutions.id/api/user/time-sheet?start=' +
+    //     start +
+    //     '&end=' +
+    //     end;
 
     mainService.getUrl(url, (res) async {
       if (res.statusCode == 200) {
@@ -148,6 +148,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: TableCalendar(
+            headerStyle: HeaderStyle(
+              formatButtonVisible: false,
+            ),
             focusedDay: DateTime.now(),
             firstDay: DateTime(2010),
             lastDay: DateTime(2040),

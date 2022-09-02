@@ -80,8 +80,8 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   Future getImage(BuildContext context) async {
-    // var url = await mainService.urlApi() + '/api/v1/user/profile/picture';
-    var url = 'https://ng-api-dev.gitsolutions.id/api/user/profile/picture';
+    var url = await mainService.urlApi() + '/api/v1/user/profile/picture';
+    // var url = 'https://ng-api-dev.gitsolutions.id/api/user/profile/picture';
 
     mainService.getUrl(url, (res) {
       if (res.statusCode == 200) {
@@ -97,8 +97,8 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   postImage(formData) async {
-    // var url = await mainService.urlApi() + '/api/v1/user/profile/picture';
-    var url = 'https://ng-api-dev.gitsolutions.id/api/user/profile/picture';
+    var url = await mainService.urlApi() + '/api/v1/user/profile/picture';
+    // var url = 'https://ng-api-dev.gitsolutions.id/api/user/profile/picture';
 
     var fileName = formData.path.split('/').last;
 

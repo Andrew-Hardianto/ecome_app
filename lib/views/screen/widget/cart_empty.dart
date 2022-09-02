@@ -33,11 +33,11 @@ class CartEmpty extends StatelessWidget {
           ),
           Container(
             width: MediaQuery.of(context).size.width - 40,
-            child: RaisedButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                shape: StadiumBorder(),
               ),
-              color: Colors.green[200],
               onPressed: () {},
               child: Center(
                 child: Text(

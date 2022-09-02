@@ -43,7 +43,7 @@ dependencies:
   flutter_jailbreak_detection: ^1.8.0
   trust_location: ^2.0.13
   location: ^4.2.0
-  google_maps_flutter: ^2.1.10
+  google_maps_flutter: ^2.2.0
   carousel_slider: ^4.1.1
   intl: ^0.17.0
   flutter_datetime_picker: ^1.5.1
