@@ -1,6 +1,7 @@
 import 'package:ecome_app/provider/user_provider.dart';
 import 'package:ecome_app/views/screen/home/home_service.dart';
 import 'package:ecome_app/views/screen/widget/Sidemenu/sidemenu_service.dart';
+import 'package:ecome_app/views/screen/widget/tooltip-profile/tooltip_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ecome_app/utils/extension.dart';
@@ -9,6 +10,16 @@ class SidemenuNavigation extends StatelessWidget {
   // const SidemenuNavigation({Key? key}) : super(key: key);
   final homeService = HomeService();
   final sidemenuService = SidemenuService();
+
+  openTooltip(BuildContext context, user) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return TooltipProfile(
+            user: user,
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,12 +76,17 @@ class SidemenuNavigation extends StatelessWidget {
                 SizedBox(
                   height: 10,
                 ),
-                Text(
-                  user.fullName != null ? user.fullName! : '-',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                InkWell(
+                  onTap: () {
+                    openTooltip(context, user);
+                  },
+                  child: Text(
+                    user.fullName != null ? user.fullName! : '-',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
                 Text(
