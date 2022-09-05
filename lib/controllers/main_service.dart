@@ -174,9 +174,11 @@ class MainService {
     try {
       var formData = FormData.fromMap(data);
 
-      var res = await dio.post(urlApi,
-          data: formData,
-          options: Options(headers: headers, sendTimeout: 35000));
+      var res = await dio.post(
+        urlApi,
+        data: formData,
+        options: Options(headers: headers, sendTimeout: 35000),
+      );
 
       // var res = await http
       //     .post(Uri.parse(urlApi), headers: headers, body: formData)

@@ -105,13 +105,14 @@ class _CameraScreenState extends State<CameraScreen> {
     var ext = fileName.split('.').last;
 
     var form = {
-      'profilePicture':
-          await MultipartFile.fromBytes(await formData.readAsBytes(),
-              filename: fileName,
-              contentType: MediaType(
-                'image',
-                ext,
-              ))
+      'profilePicture': await MultipartFile.fromBytes(
+        await formData.readAsBytes(),
+        filename: fileName,
+        contentType: MediaType(
+          'image',
+          ext,
+        ),
+      )
     };
 
     mainService.postFormDataUrlApi(url, form, (res) {
