@@ -211,8 +211,12 @@ class MainService {
   void errorHandlingDio(dynamic res, BuildContext context) {
     if (res.response.statusCode == 401 || res.response.statusCode == 400) {
       var msg = jsonDecode(res.response);
-      SnackBarError(context, msg);
-      // SnackBarError(context, "Can\'t connect to server. Please Contact Admin!");
+      if (msg == '') {
+        SnackBarError(context, msg);
+      } else {
+        SnackBarError(
+            context, "Can\'t connect to server. Please Contact Admin!");
+      }
     } else {
       SnackBarError(context, "Can\'t connect to server. Please Contact Admin!");
     }
